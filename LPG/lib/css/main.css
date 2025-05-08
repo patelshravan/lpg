@@ -1,0 +1,240 @@
+:root {
+  --blue1: #00a3e0;
+  --dark-blue: #007aa8;
+  --grey1: #ececec;
+  --grad-grey: linear-gradient(90deg, #858585 0%, #3b3b3b 100%);
+  --grad-blue: linear-gradient(90deg, #8dcbe7 0%, #009ed7 100%);
+  --grad-orange: linear-gradient(90deg, #feb14f 0%, #fb7102 100%);
+
+  --complete-size: 134px;
+  --flow-width: 176px;
+}
+
+.top-header {
+  border-bottom: 8px solid #007aa8;
+  background: var(--blue1);
+}
+.bottom-header {
+  background: #ececec;
+}
+
+.stepper-horizontal {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  /*   background-image: url(https://i.imgur.com/IA9mpIf.png); */
+  transform: scale(0.8);
+}
+
+ul.stepper {
+  padding: 0 1.5rem;
+  padding: 1.5rem;
+  margin: 0 -1.5rem;
+  overflow-x: auto;
+  overflow-y: auto;
+  counter-reset: section;
+}
+
+ul.stepper li {
+  height: min-content;
+  min-width: 230px;
+}
+.v-center {
+  display: flex;
+  align-items: center;
+}
+.h-center {
+  display: flex;
+  justify-content: center;
+}
+.arrow-container {
+  background: #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  clip-path: polygon(
+    0% 20%,
+    90% 20%,
+    90% 6%,
+    100% 50%,
+    90% 94%,
+    90% 80%,
+    0% 80%,
+    7% 50%
+  );
+  text-align: center;
+  width: 108%;
+}
+
+.arrow-container .count {
+  font-size: 2em;
+  font-weight: 600;
+  transform: translate(-8px, 0);
+}
+.complete-container {
+  height: var(--flow-width);
+  width: var(--flow-width);
+  background: var(--grad-grey);
+  border-radius: 50%;
+  text-align: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 2em;
+  position: relative;
+  top: 100px;
+  left: 20px;
+}
+.body-container {
+  background: #ccc;
+  position: relative;
+  width: var(--flow-width);
+  margin: auto;
+  margin-top: 19px;
+  margin-bottom: 30px;
+  padding: 15px;
+  border-radius: 5px;
+  height: 160px;
+}
+.body-container .fa-checkbox {
+  cursor: pointer;
+  font-size: 1em;
+  margin-right: 6px;
+  margin-top: 4px;
+  background: #fff;
+  align-self: baseline;
+  padding: 2px;
+  width: 28px;
+  flex-shrink: 0;
+}
+.body-container .form-check-label {
+  display: flex;
+  margin-bottom: 5px;
+  text-align: left;
+}
+.body-container .form-check-label > .form-check-input {
+  opacity: 0;
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+li .body-container .fa-checkbox:before {
+  /* content: "\f0c8"; */
+  content: "\2751";
+}
+li .body-container .form-check-label input:checked ~ .fa-checkbox:before {
+  content: "\2714";
+  /* content: "\f00c"; */
+  color: var(--dark-blue);
+}
+
+.stepper .footer-container .footer-body {
+  display: flex;
+  padding: 0 14px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.stepper li.active .footer-container .footer-body {
+  color: var(--blue1);
+}
+
+.stepper .footer-container .footer-body .fas {
+  font-size: 40px;
+  margin-bottom: 9px;
+}
+.stepper .footer-container .footer-body p {
+  margin-bottom: 0;
+}
+.body-container:before {
+  content: "";
+  display: inline-block;
+  height: 3em;
+  position: absolute;
+  top: -35px;
+  width: 1.6em;
+  left: calc(50% - 0.8em);
+  z-index: -1;
+  background: inherit;
+}
+.body-container:after {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  bottom: -34px;
+  z-index: -1;
+  background: inherit;
+  height: 2.3em;
+  width: 1.6em;
+  left: calc(50% - 0.8em);
+}
+
+.footer-container {
+  width: var(--flow-width);
+  margin: auto;
+  padding: 10px;
+  border-radius: 5px;
+}
+.footer-body {
+  background-color: #fff;
+  color: #000;
+  width: 100%;
+  height: 100%;
+  min-height: 120px;
+  border-radius: 5px;
+}
+.text-grey {
+  color: var(--grey1);
+}
+.bg-grey > div {
+  background: var(--grey1);
+  color: #000;
+}
+.bg-blue > div {
+  background: var(--grad-blue);
+  color: #fff;
+}
+a:hover {
+  text-decoration: none !important;
+}
+ul.stepper li > div:not(.complete-container) {
+  width: 96%;
+}
+ul.stepper li > div > div {
+  background: var(--grad-grey);
+  color: #fff;
+}
+
+ul.stepper li.active > div > div {
+  background: var(--grad-blue);
+  color: #fff;
+}
+
+.stepper-horizontal {
+  overflow: auto;
+}
+.stepper-horizontal li {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+}
+.head-section {
+  background-image: url(./images/flow_bg.png);
+  /* background-image: url(https://i.imgur.com/IA9mpIf.png); */
+}
+@media only screen and (min-width: 600px) {
+  .head-section {
+    max-width: 95%;
+    margin: auto;
+  }
+}

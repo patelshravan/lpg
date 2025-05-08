@@ -1,0 +1,50 @@
+{
+  "terminals": [
+    {
+      "name": "East",
+      "product_groups": [
+        {
+          "name": "Crude",
+          "products": ["AXL", "AL", "AM", "AH"]
+        },
+        {
+          "name": "NG",
+          "products": ["A-010"]
+        },
+        {
+          "name": "Sulfur",
+          "products": ["A-050"]
+        },
+        {
+          "name": "Naphtha",
+          "products": ["A-170"]
+        },
+        {
+          "name": "Refined Oil",
+          "products": ["A-863", "A-864"]
+        }
+      ]
+    },
+    {
+      "name": "West",
+      "product_groups": [
+        {
+          "name": "Crude",
+          "products": ["AXL", "AL"]
+        },
+        {
+          "name": "NG",
+          "products": ["A-010"]
+        },
+        {
+          "name": "Naphtha",
+          "products": ["A-170"]
+        },
+        {
+          "name": "Refined Oil",
+          "products": ["A-863", "A-864"]
+        }
+      ]
+    }
+  ]
+}

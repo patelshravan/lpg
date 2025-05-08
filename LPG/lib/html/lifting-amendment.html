@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lifting Amendment Simulator</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/bootstrap.min.css?v=1.0" />
+    <link rel="stylesheet" href="../css/bootstrap-datepicker.min.css" />
+    <link rel="stylesheet" href="../css/lifting-amendment.css?v=1.0" />
+    <link rel="stylesheet" href="../css/fontawesome.min.css" />
+    <link rel="stylesheet" href="../css/styles.css?v=1.0" />
+
+    <!-- JS Libraries -->
+    <script src="../js/jquery.min.js?v=1.0"></script>
+    <script src="../js/bootstrap.min.js?v=1.0"></script>
+    <script src="../js/bootstrap-datepicker.min.js"></script>
+    <script src="../js/moment.min.js?v=1.0"></script>
+
+    <!-- Toast -->
+    <link rel="stylesheet" href="../css/toastr.min.css" />
+    <script src="../js/toastr.min.js"></script>
+
+    <!-- Fallback jQuery if not loaded -->
+    <script>
+      window.jQuery ||
+        document.write('<script src="js/jquery.min.js?v=1.0"><\/script>');
+    </script>
+  </head>
+
+  <body>
+    <header id="app-header">
+      <a href="./landing-page.html"><i class="fa fa-home fa-2x"></i></a>
+      <div class="ml-4 title">Lifting Amendment Simulator</div>
+      <img src="../img/SA_logo.jpg" alt="logo" class="logo" />
+    </header>
+    <div class="header-border mb-4"></div>
+
+    <div class="container mt-5 d-flex justify-content-center">
+      <div class="card p-4 shadow-lg">
+        <h3 class="text-center mb-4">Lifting Amendment Simulator</h3>
+        <form>
+          <!-- Two-Column Layout for Terminal & Product Group -->
+          <div class="form-container">
+            <div class="mb-3">
+              <label for="terminal" class="form-label">Terminal</label>
+              <select id="terminal" class="form-select"></select>
+            </div>
+            <div class="mb-3">
+              <label for="productGroup" class="form-label">Product Group</label>
+              <select id="productGroup" class="form-select"></select>
+            </div>
+          </div>
+
+          <!-- Product Selection -->
+          <div class="mb-3">
+            <label class="form-label">Products</label>
+            <div class="products-container"></div>
+          </div>
+
+          <!-- Month Picker -->
+          <div class="mb-3">
+            <label for="monthPicker" class="form-label">Month</label>
+            <input type="text" id="monthPicker" class="form-control" readonly />
+          </div>
+
+          <div id="error-message" class="text-danger mb-3"></div>
+
+          <!-- Proceed Buttons -->
+          <div class="d-grid gap-2 d-md-flex justify-content-center mt-3">
+            <button class="btn btn-secondary btn-lg mx-2" id="btn-view-one">
+              Click to Proceed (View One)
+            </button>
+            <button class="btn btn-secondary btn-lg mx-2" id="btn-view-two">
+              Click to Process (View Two)
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Inject JS with cache-busting timestamp -->
+    <script>
+      const script = document.createElement("script");
+      script.src = `../js/lifting-amendment.js?v=${Date.now()}`;
+      document.body.appendChild(script);
+    </script>
+  </body>
+</html>

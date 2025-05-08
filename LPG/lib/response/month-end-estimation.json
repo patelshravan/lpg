@@ -1,0 +1,357 @@
+{
+  "MAPPING": [
+    {
+      "Customer": "ALL",
+      "PlannerGroup": "DSLDHDF",
+      "Product": "A-970",
+      "ProductGroup": "Asphalt"
+    },
+    {
+      "Customer": "ALL",
+      "PlannerGroup": "DSLDCOF",
+      "Product": "ALL",
+      "ProductGroup": "Crude Oil"
+    },
+    {
+      "Customer": "WO_DD",
+      "PlannerGroup": "DSLDHDF",
+      "Product": "ALL",
+      "ProductGroup": "Fuel Oil"
+    },
+    {
+      "Customer": "W_DD",
+      "PlannerGroup": "DSLDHDF",
+      "Product": "ALL",
+      "ProductGroup": "Fuel Oil"
+    },
+    {
+      "Customer": "ALL",
+      "PlannerGroup": "DSLDHDF",
+      "Product": "ALL",
+      "ProductGroup": "Fuel Oil"
+    },
+    {
+      "Customer": "ALL",
+      "PlannerGroup": "DSLDHDF",
+      "Product": "A-930",
+      "ProductGroup": "Reduced Crude"
+    },
+    {
+      "Customer": "ALL",
+      "PlannerGroup": "DSLDHDF",
+      "Product": "A-940",
+      "ProductGroup": "Vacuum Gas Oil"
+    },
+    {
+      "Customer": "ALL",
+      "PlannerGroup": "DSLDMLDF",
+      "Product": "ALL",
+      "ProductGroup": "Diesel"
+    },
+    {
+      "Customer": "ALL",
+      "PlannerGroup": "DSLDMLDF",
+      "Product": "A-395",
+      "ProductGroup": "Gasoline"
+    },
+    {
+      "Customer": "ALL",
+      "PlannerGroup": "DSLDMLDF",
+      "Product": "A-391",
+      "ProductGroup": "Gasoline"
+    },
+    {
+      "Customer": "ALL",
+      "PlannerGroup": "DSLDMLDF",
+      "Product": "A-411",
+      "ProductGroup": "Jet Base"
+    },
+    {
+      "Customer": "ALL",
+      "PlannerGroup": "DSLDMLDF",
+      "Product": "A-418",
+      "ProductGroup": "Jet Base"
+    },
+    {
+      "Customer": "ALL",
+      "PlannerGroup": "DSLDMLDF",
+      "Product": "A-438",
+      "ProductGroup": "Jet Base"
+    },
+    {
+      "Customer": "ALL",
+      "PlannerGroup": "DSLDMLDF",
+      "Product": "A-140",
+      "ProductGroup": "LPG"
+    },
+    {
+      "Customer": "ALL",
+      "PlannerGroup": "DSLDMLDF",
+      "Product": "A-150",
+      "ProductGroup": "LPG"
+    },
+    {
+      "Customer": "ALL",
+      "PlannerGroup": "DSLDMLDF",
+      "Product": "A-160",
+      "ProductGroup": "LPG"
+    }
+  ],
+  "DATA": [
+    {
+      "Key": 26,
+      "Start_DT": "  01MAR2025:00:00:00",
+      "ProductGroup": "Asphalt",
+      "Product": "A-970",
+      "Customer": "ALL",
+      "Actual": 44.844,
+      "Final_Operating_FCST": 50.5,
+      "Final_Planning_FCST": 45,
+      "Month_End_Estimate": 0,
+      "Variance": 0,
+      "Quota_Impact": 0,
+      "Remark": "",
+      "Date": "19 MAR2025"
+    },
+    {
+      "Key": 27,
+      "Start_DT": "  01MAR2025:00:00:00",
+      "ProductGroup": "Crude Oil",
+      "Product": "ALL",
+      "Customer": "ALL",
+      "Actual": 370.202111111,
+      "Final_Operating_FCST": 360.974516149,
+      "Final_Planning_FCST": 359.601748924,
+      "Month_End_Estimate": 0,
+      "Variance": 0,
+      "Quota_Impact": 0,
+      "Remark": "",
+      "Date": "19 MAR2025"
+    },
+    {
+      "Key": 28,
+      "Start_DT": "  01MAR2025:00:00:00",
+      "ProductGroup": "Diesel",
+      "Product": "ALL",
+      "Customer": "ALL",
+      "Actual": 553.506111833,
+      "Final_Operating_FCST": 550.041317337,
+      "Final_Planning_FCST": 561.775924401,
+      "Month_End_Estimate": 550,
+      "Variance": -11.78,
+      "Quota_Impact": 11,
+      "Remark": "TEST",
+      "Date": "19 MAR2025"
+    },
+    {
+      "Key": 29,
+      "Start_DT": "  01MAR2025:00:00:00",
+      "ProductGroup": "Fuel Oil",
+      "Product": "ALL",
+      "Customer": "ALL",
+      "Actual": 110.534555556,
+      "Final_Operating_FCST": 259.546129067,
+      "Final_Planning_FCST": 238.440322616,
+      "Month_End_Estimate": 0,
+      "Variance": 0,
+      "Quota_Impact": 0,
+      "Remark": "",
+      "Date": "19 MAR2025"
+    },
+    {
+      "Key": 30,
+      "Start_DT": "  01MAR2025:00:00:00",
+      "ProductGroup": "Fuel Oil",
+      "Product": "ALL",
+      "Customer": "W_DD",
+      "Actual": 162.435944444,
+      "Final_Operating_FCST": 210.967741938,
+      "Final_Planning_FCST": 230.645161293,
+      "Month_End_Estimate": 0,
+      "Variance": 0,
+      "Quota_Impact": 0,
+      "Remark": "",
+      "Date": "19 MAR2025"
+    },
+    {
+      "Key": 31,
+      "Start_DT": "  01MAR2025:00:00:00",
+      "ProductGroup": "Gasoline",
+      "Product": "A-390",
+      "Customer": "ALL",
+      "Actual": 0,
+      "Final_Operating_FCST": 0.0125475155775,
+      "Final_Planning_FCST": 0.00363780415249,
+      "Month_End_Estimate": 0,
+      "Variance": 0,
+      "Quota_Impact": 0,
+      "Remark": "",
+      "Date": "19 MAR2025"
+    },
+    {
+      "Key": 32,
+      "Start_DT": "  01MAR2025:00:00:00",
+      "ProductGroup": "Gasoline",
+      "Product": "A-391",
+      "Customer": "ALL",
+      "Actual": 350.760966444,
+      "Final_Operating_FCST": 352.27932101,
+      "Final_Planning_FCST": 373.701587653,
+      "Month_End_Estimate": 0,
+      "Variance": 0,
+      "Quota_Impact": 0,
+      "Remark": "",
+      "Date": "19 MAR2025"
+    },
+    {
+      "Key": 33,
+      "Start_DT": "  01MAR2025:00:00:00",
+      "ProductGroup": "Gasoline",
+      "Product": "A-395",
+      "Customer": "ALL",
+      "Actual": 134.485555556,
+      "Final_Operating_FCST": 132.947086971,
+      "Final_Planning_FCST": 137.899050058,
+      "Month_End_Estimate": 0,
+      "Variance": 0,
+      "Quota_Impact": 0,
+      "Remark": "",
+      "Date": "19 MAR2025"
+    },
+    {
+      "Key": 34,
+      "Start_DT": "  01MAR2025:00:00:00",
+      "ProductGroup": "Jet Base",
+      "Product": "A-411",
+      "Customer": "ALL",
+      "Actual": 2.16838888889,
+      "Final_Operating_FCST": 2.01,
+      "Final_Planning_FCST": 1.95761531075,
+      "Month_End_Estimate": 0,
+      "Variance": 0,
+      "Quota_Impact": 0,
+      "Remark": "",
+      "Date": "19 MAR2025"
+    },
+    {
+      "Key": 35,
+      "Start_DT": "  01MAR2025:00:00:00",
+      "ProductGroup": "Jet Base",
+      "Product": "A-418",
+      "Customer": "ALL",
+      "Actual": 91.0331065,
+      "Final_Operating_FCST": 98.8906955848,
+      "Final_Planning_FCST": 94.92,
+      "Month_End_Estimate": 0,
+      "Variance": 0,
+      "Quota_Impact": 0,
+      "Remark": "",
+      "Date": "19 MAR2025"
+    },
+    {
+      "Key": 36,
+      "Start_DT": "  01MAR2025:00:00:00",
+      "ProductGroup": "Jet Base",
+      "Product": "A-438",
+      "Customer": "ALL",
+      "Actual": 8.16261711111,
+      "Final_Operating_FCST": 11.5189495362,
+      "Final_Planning_FCST": 8.74916662492,
+      "Month_End_Estimate": 0,
+      "Variance": 0,
+      "Quota_Impact": 0,
+      "Remark": "",
+      "Date": "19 MAR2025"
+    },
+    {
+      "Key": 37,
+      "Start_DT": "  01MAR2025:00:00:00",
+      "ProductGroup": "LPG",
+      "Product": "A-140",
+      "Customer": "ALL",
+      "Actual": 0.582555555556,
+      "Final_Operating_FCST": 1,
+      "Final_Planning_FCST": 0.799766552161,
+      "Month_End_Estimate": 0,
+      "Variance": 0,
+      "Quota_Impact": 0,
+      "Remark": "",
+      "Date": "19 MAR2025"
+    },
+    {
+      "Key": 38,
+      "Start_DT": "  01MAR2025:00:00:00",
+      "ProductGroup": "LPG",
+      "Product": "A-150",
+      "Customer": "ALL",
+      "Actual": 61.2018888889,
+      "Final_Operating_FCST": 56.5,
+      "Final_Planning_FCST": 60.8,
+      "Month_End_Estimate": 0,
+      "Variance": 0,
+      "Quota_Impact": 0,
+      "Remark": "",
+      "Date": "19 MAR2025"
+    },
+    {
+      "Key": 39,
+      "Start_DT": "  01MAR2025:00:00:00",
+      "ProductGroup": "LPG",
+      "Product": "A-160",
+      "Customer": "ALL",
+      "Actual": 0.402666666667,
+      "Final_Operating_FCST": 1.82503268612,
+      "Final_Planning_FCST": 1.82451423738,
+      "Month_End_Estimate": 0,
+      "Variance": 0,
+      "Quota_Impact": 0,
+      "Remark": "",
+      "Date": "19 MAR2025"
+    },
+    {
+      "Key": 40,
+      "Start_DT": "  01MAR2025:00:00:00",
+      "ProductGroup": "Naphtha",
+      "Product": "A-310",
+      "Customer": "ALL",
+      "Actual": 0,
+      "Final_Operating_FCST": 0,
+      "Final_Planning_FCST": 0,
+      "Month_End_Estimate": 0,
+      "Variance": 0,
+      "Quota_Impact": 0,
+      "Remark": "",
+      "Date": "19 MAR2025"
+    },
+    {
+      "Key": 41,
+      "Start_DT": "  01MAR2025:00:00:00",
+      "ProductGroup": "Reduced Crude",
+      "Product": "A-930",
+      "Customer": "ALL",
+      "Actual": 37.3072777778,
+      "Final_Operating_FCST": 48,
+      "Final_Planning_FCST": 43.5,
+      "Month_End_Estimate": 0,
+      "Variance": 0,
+      "Quota_Impact": 0,
+      "Remark": "",
+      "Date": "19 MAR2025"
+    },
+    {
+      "Key": 42,
+      "Start_DT": "  01MAR2025:00:00:00",
+      "ProductGroup": "Reformate",
+      "Product": "A-360",
+      "Customer": "ALL",
+      "Actual": 0,
+      "Final_Operating_FCST": 0,
+      "Final_Planning_FCST": 0,
+      "Month_End_Estimate": 0,
+      "Variance": 0,
+      "Quota_Impact": 0,
+      "Remark": "",
+      "Date": "19 MAR2025"
+    }
+  ]
+}

@@ -1,0 +1,572 @@
+[
+    {
+        "date": 1,
+        "area": "Qatif",
+        "product": "AXL",
+        "gosp_data": [
+            {
+                "gosp": "GOSP1",
+                "actual": 492,
+                "target": 596
+            },
+            {
+                "gosp": "GOSP2",
+                "actual": 400,
+                "target": 400
+            }
+        ],
+        "total_actual": 892,
+        "total_planned": 996
+    },
+    {
+        "date": 2,
+        "area": "Qatif",
+        "product": "AXL",
+        "gosp_data": [
+            {
+                "gosp": "GOSP1",
+                "actual": 339,
+                "target": 429
+            },
+            {
+                "gosp": "GOSP2",
+                "actual": 400,
+                "target": 400
+            }
+        ],
+        "total_actual": 739,
+        "total_planned": 829
+    },
+    {
+        "date": 3,
+        "area": "Qatif",
+        "product": "AXL",
+        "gosp_data": [
+            {
+                "gosp": "GOSP1",
+                "actual": 228,
+                "target": 255
+            },
+            {
+                "gosp": "GOSP2",
+                "actual": 400,
+                "target": 400
+            }
+        ],
+        "total_actual": 628,
+        "total_planned": 655
+    },
+    {
+        "date": 4,
+        "area": "Qatif",
+        "product": "AXL",
+        "gosp_data": [
+            {
+                "gosp": "GOSP1",
+                "actual": 508,
+                "target": 203
+            },
+            {
+                "gosp": "GOSP2",
+                "actual": 400,
+                "target": 400
+            }
+        ],
+        "total_actual": 908,
+        "total_planned": 603
+    },
+    {
+        "date": 5,
+        "area": "Qatif",
+        "product": "AXL",
+        "gosp_data": [
+            {
+                "gosp": "GOSP1",
+                "actual": 216,
+                "target": 264
+            },
+            {
+                "gosp": "GOSP2",
+                "actual": 400,
+                "target": 400
+            }
+        ],
+        "total_actual": 616,
+        "total_planned": 664
+    },
+    {
+        "date": 6,
+        "area": "Qatif",
+        "product": "AXL",
+        "gosp_data": [
+            {
+                "gosp": "GOSP1",
+                "actual": 263,
+                "target": 452
+            },
+            {
+                "gosp": "GOSP2",
+                "actual": 400,
+                "target": 400
+            }
+        ],
+        "total_actual": 663,
+        "total_planned": 852
+    },
+    {
+        "date": 7,
+        "area": "Qatif",
+        "product": "AXL",
+        "gosp_data": [
+            {
+                "gosp": "GOSP1",
+                "actual": 414,
+                "target": 319
+            },
+            {
+                "gosp": "GOSP2",
+                "actual": 400,
+                "target": 400
+            }
+        ],
+        "total_actual": 814,
+        "total_planned": 719
+    },
+    {
+        "date": 8,
+        "area": "Qatif",
+        "product": "AXL",
+        "gosp_data": [
+            {
+                "gosp": "GOSP1",
+                "actual": 514,
+                "target": 524
+            },
+            {
+                "gosp": "GOSP2",
+                "actual": 400,
+                "target": 400
+            }
+        ],
+        "total_actual": 914,
+        "total_planned": 924
+    },
+    {
+        "date": 9,
+        "area": "Qatif",
+        "product": "AXL",
+        "gosp_data": [
+            {
+                "gosp": "GOSP1",
+                "actual": 557,
+                "target": 402
+            },
+            {
+                "gosp": "GOSP2",
+                "actual": 400,
+                "target": 400
+            }
+        ],
+        "total_actual": 957,
+        "total_planned": 802
+    },
+    {
+        "date": 10,
+        "area": "Qatif",
+        "product": "AXL",
+        "gosp_data": [
+            {
+                "gosp": "GOSP1",
+                "actual": 337,
+                "target": 504
+            },
+            {
+                "gosp": "GOSP2",
+                "actual": 400,
+                "target": 400
+            }
+        ],
+        "total_actual": 737,
+        "total_planned": 904
+    },
+    {
+        "date": 11,
+        "area": "Qatif",
+        "product": "AXL",
+        "gosp_data": [
+            {
+                "gosp": "GOSP1",
+                "actual": 544,
+                "target": 446
+            },
+            {
+                "gosp": "GOSP2",
+                "actual": 400,
+                "target": 400
+            }
+        ],
+        "total_actual": 944,
+        "total_planned": 846
+    },
+    {
+        "date": 12,
+        "area": "Qatif",
+        "product": "AXL",
+        "gosp_data": [
+            {
+                "gosp": "GOSP1",
+                "actual": 509,
+                "target": 539
+            },
+            {
+                "gosp": "GOSP2",
+                "actual": 400,
+                "target": 400
+            }
+        ],
+        "total_actual": 909,
+        "total_planned": 939
+    },
+    {
+        "date": 13,
+        "area": "Qatif",
+        "product": "AXL",
+        "gosp_data": [
+            {
+                "gosp": "GOSP1",
+                "actual": 380,
+                "target": 152
+            },
+            {
+                "gosp": "GOSP2",
+                "actual": 400,
+                "target": 400
+            }
+        ],
+        "total_actual": 780,
+        "total_planned": 552
+    },
+    {
+        "date": 14,
+        "area": "Qatif",
+        "product": "AXL",
+        "gosp_data": [
+            {
+                "gosp": "GOSP1",
+                "actual": 468,
+                "target": 399
+            },
+            {
+                "gosp": "GOSP2",
+                "actual": 400,
+                "target": 400
+            }
+        ],
+        "total_actual": 868,
+        "total_planned": 799
+    },
+    {
+        "date": 15,
+        "area": "Qatif",
+        "product": "AXL",
+        "gosp_data": [
+            {
+                "gosp": "GOSP1",
+                "actual": 418,
+                "target": 329
+            },
+            {
+                "gosp": "GOSP2",
+                "actual": 400,
+                "target": 400
+            }
+        ],
+        "total_actual": 818,
+        "total_planned": 729
+    },
+    {
+        "date": 16,
+        "area": "Qatif",
+        "product": "AXL",
+        "gosp_data": [
+            {
+                "gosp": "GOSP1",
+                "actual": 488,
+                "target": 450
+            },
+            {
+                "gosp": "GOSP2",
+                "actual": 400,
+                "target": 400
+            }
+        ],
+        "total_actual": 888,
+        "total_planned": 850
+    },
+    {
+        "date": 17,
+        "area": "Qatif",
+        "product": "AXL",
+        "gosp_data": [
+            {
+                "gosp": "GOSP1",
+                "actual": 382,
+                "target": 280
+            },
+            {
+                "gosp": "GOSP2",
+                "actual": 400,
+                "target": 400
+            }
+        ],
+        "total_actual": 782,
+        "total_planned": 680
+    },
+    {
+        "date": 18,
+        "area": "Qatif",
+        "product": "AXL",
+        "gosp_data": [
+            {
+                "gosp": "GOSP1",
+                "actual": 455,
+                "target": 337
+            },
+            {
+                "gosp": "GOSP2",
+                "actual": 400,
+                "target": 400
+            }
+        ],
+        "total_actual": 855,
+        "total_planned": 737
+    },
+    {
+        "date": 19,
+        "area": "Qatif",
+        "product": "AXL",
+        "gosp_data": [
+            {
+                "gosp": "GOSP1",
+                "actual": 319,
+                "target": 215
+            },
+            {
+                "gosp": "GOSP2",
+                "actual": 400,
+                "target": 400
+            }
+        ],
+        "total_actual": 719,
+        "total_planned": 615
+    },
+    {
+        "date": 20,
+        "area": "Qatif",
+        "product": "AXL",
+        "gosp_data": [
+            {
+                "gosp": "GOSP1",
+                "actual": 432,
+                "target": 306
+            },
+            {
+                "gosp": "GOSP2",
+                "actual": 400,
+                "target": 400
+            }
+        ],
+        "total_actual": 832,
+        "total_planned": 706
+    },
+    {
+        "date": 21,
+        "area": "Qatif",
+        "product": "AXL",
+        "gosp_data": [
+            {
+                "gosp": "GOSP1",
+                "actual": 151,
+                "target": 347
+            },
+            {
+                "gosp": "GOSP2",
+                "actual": 400,
+                "target": 400
+            }
+        ],
+        "total_actual": 551,
+        "total_planned": 747
+    },
+    {
+        "date": 22,
+        "area": "Qatif",
+        "product": "AXL",
+        "gosp_data": [
+            {
+                "gosp": "GOSP1",
+                "actual": 583,
+                "target": 267
+            },
+            {
+                "gosp": "GOSP2",
+                "actual": 400,
+                "target": 400
+            }
+        ],
+        "total_actual": 983,
+        "total_planned": 667
+    },
+    {
+        "date": 23,
+        "area": "Qatif",
+        "product": "AXL",
+        "gosp_data": [
+            {
+                "gosp": "GOSP1",
+                "actual": 321,
+                "target": 200
+            },
+            {
+                "gosp": "GOSP2",
+                "actual": 400,
+                "target": 400
+            }
+        ],
+        "total_actual": 721,
+        "total_planned": 600
+    },
+    {
+        "date": 24,
+        "area": "Qatif",
+        "product": "AXL",
+        "gosp_data": [
+            {
+                "gosp": "GOSP1",
+                "actual": 454,
+                "target": 168
+            },
+            {
+                "gosp": "GOSP2",
+                "actual": 400,
+                "target": 400
+            }
+        ],
+        "total_actual": 854,
+        "total_planned": 568
+    },
+    {
+        "date": 25,
+        "area": "Qatif",
+        "product": "AXL",
+        "gosp_data": [
+            {
+                "gosp": "GOSP1",
+                "actual": 585,
+                "target": 417
+            },
+            {
+                "gosp": "GOSP2",
+                "actual": 400,
+                "target": 400
+            }
+        ],
+        "total_actual": 985,
+        "total_planned": 817
+    },
+    {
+        "date": 26,
+        "area": "Qatif",
+        "product": "AXL",
+        "gosp_data": [
+            {
+                "gosp": "GOSP1",
+                "actual": 255,
+                "target": 248
+            },
+            {
+                "gosp": "GOSP2",
+                "actual": 400,
+                "target": 400
+            }
+        ],
+        "total_actual": 655,
+        "total_planned": 648
+    },
+    {
+        "date": 27,
+        "area": "Qatif",
+        "product": "AXL",
+        "gosp_data": [
+            {
+                "gosp": "GOSP1",
+                "actual": 388,
+                "target": 528
+            },
+            {
+                "gosp": "GOSP2",
+                "actual": 400,
+                "target": 400
+            }
+        ],
+        "total_actual": 788,
+        "total_planned": 928
+    },
+    {
+        "date": 28,
+        "area": "Qatif",
+        "product": "AXL",
+        "gosp_data": [
+            {
+                "gosp": "GOSP1",
+                "actual": 542,
+                "target": 575
+            },
+            {
+                "gosp": "GOSP2",
+                "actual": 400,
+                "target": 400
+            }
+        ],
+        "total_actual": 942,
+        "total_planned": 975
+    },
+    {
+        "date": 29,
+        "area": "Qatif",
+        "product": "AXL",
+        "gosp_data": [
+            {
+                "gosp": "GOSP1",
+                "actual": 210,
+                "target": 279
+            },
+            {
+                "gosp": "GOSP2",
+                "actual": 400,
+                "target": 400
+            }
+        ],
+        "total_actual": 610,
+        "total_planned": 679
+    },
+    {
+        "date": 30,
+        "area": "Qatif",
+        "product": "AXL",
+        "gosp_data": [
+            {
+                "gosp": "GOSP1",
+                "actual": 152,
+                "target": 410
+            },
+            {
+                "gosp": "GOSP2",
+                "actual": 400,
+                "target": 400
+            }
+        ],
+        "total_actual": 552,
+        "total_planned": 810
+    }
+]

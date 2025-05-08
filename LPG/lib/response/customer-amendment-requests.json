@@ -1,0 +1,28 @@
+{
+  "CUSTOMERAMENDMENTREQUESTS": [
+    {
+      "NOMINATION_NO": "126678",
+      "SHIP_NAME": "BW MAGELLAN",
+      "DATE_VALUE": 1,
+      "SCHEDULED_QTY": 100,
+      "DATE_VALUE_ADJ": 1,
+      "SCHEDULED_QTY_ADJ": 120
+    },
+    {
+      "NOMINATION_NO": "NOM002",
+      "SHIP_NAME": "Sea King",
+      "DATE_VALUE": 2,
+      "SCHEDULED_QTY": 80,
+      "DATE_VALUE_ADJ": 4,
+      "SCHEDULED_QTY_ADJ": 90
+    },
+    {
+      "NOMINATION_NO": "NOM003",
+      "SHIP_NAME": "Blue Horizon",
+      "DATE_VALUE": 1,
+      "SCHEDULED_QTY": 60,
+      "DATE_VALUE_ADJ": 1,
+      "SCHEDULED_QTY_ADJ": 75
+    }
+  ]
+}

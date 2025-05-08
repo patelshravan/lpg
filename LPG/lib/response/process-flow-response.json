@@ -1,0 +1,50 @@
+{
+  "west_availability": [
+    {
+      "PLANNING_CYCLE": "FEB2024",
+      "STAGE": "Mark West Berth Availability",
+      "STATUS": 0,
+      "SYS_COMPUTE_SESSION_OWNER": "kapureax"
+    }
+  ],
+  "export_nomination": [
+    {
+      "PLANNING_CYCLE": "FEB2024",
+      "STAGE": "Export Customer Monthly Nominations",
+      "STATUS": 0,
+      "SYS_COMPUTE_SESSION_OWNER": "kapureax"
+    }
+  ],
+  "cosmd_planning": [
+    {
+      "PLANNING_CYCLE": "FEB2024",
+      "STAGE": "Export Demand Allocation Scenario Planning",
+      "STATUS": 2,
+      "SYS_COMPUTE_SESSION_OWNER": "kapureax"
+    }
+  ],
+  "ospas_planning": [
+    {
+      "PLANNING_CYCLE": "FEB2024",
+      "STAGE": "Approve Scenario",
+      "STATUS": 0,
+      "SYS_COMPUTE_SESSION_OWNER": "kapureax"
+    }
+  ],
+  "create_nom": [
+    {
+      "PLANNING_CYCLE": "FEB2024",
+      "STAGE": "Create Nomination in SAP",
+      "STATUS": 0,
+      "SYS_COMPUTE_SESSION_OWNER": "kapureax"
+    }
+  ],
+  "Confirm_Avails": [
+    {
+      "PLANNING_CYCLE": "FEB2024",
+      "STAGE": "NPCG Confirm",
+      "STATUS": 0,
+      "SYS_COMPUTE_SESSION_OWNER": "kapureax"
+    }
+  ]
+}

@@ -1,0 +1,121 @@
+body {
+  overflow: hidden;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9fbfd;
+  margin: 0;
+  padding: 0;
+}
+
+#app-header {
+  background-color: #ffffff;
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+}
+
+.title {
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+.header-border {
+  border-bottom: 1px solid #ccc;
+}
+
+.container {
+  max-width: 100%; /* Use full screen width */
+  margin: 20px auto;
+  padding: 0;
+  width: 100%; /* Ensure container takes full width */
+}
+
+.table-container {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  display: block;
+}
+
+.yellow-cell {
+  background-color: #fff8c4; /* Light Yellow */
+  height: 100%;
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+/* Buttons */
+#actionButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+#actionButtons button {
+  width: 42px;
+  height: 42px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+#actionButtons button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+#actionButtons i {
+  font-size: 20px;
+}
+
+#gospGrid1 {
+  width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+  max-height: 70vh; /* Limit to 70% of viewport height */
+  overflow-y: auto; /* Enable vertical scrolling if needed */
+}
+
+.dx-datagrid {
+  width: 100% !important; /* Ensure the DataGrid itself takes full width */
+  min-width: 0; /* Prevent overflow from min-width issues */
+  overflow-x: auto; /* Enable horizontal scrolling within the table if needed */
+}
+
+.dx-datagrid .dx-row > td {
+  text-align: center;
+}
+
+.dx-datagrid-headers .dx-datagrid-table .dx-row > td {
+  text-align: center !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  #gospGrid1 {
+    width: 95%; /* Slightly reduce width on smaller screens */
+  }
+}
+
+@media (max-width: 768px) {
+  #gospGrid1 {
+    width: 100%; /* Full width on mobile */
+  }
+  .dx-datagrid {
+    font-size: 12px; /* Reduce font size for better fit on small screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .dx-datagrid {
+    font-size: 10px; /* Further reduce font size for very small screens */
+  }
+}

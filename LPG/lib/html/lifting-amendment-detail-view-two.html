@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lifting Amendment Simulator</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    />
+
+    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../css/bootstrap-datepicker.min.css" />
+
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/bootstrap-datepicker.min.js"></script>
+
+    <script src="../js/jspdf.umd.min.js"></script>
+    <script src="../js/jspdf.plugin.autotable.min.js"></script>
+
+    <link rel="stylesheet" href="../css/fontawesome-all.min.css" />
+
+    <!-- Toast -->
+    <link rel="stylesheet" href="../css/toastr.min.css" />
+    <script src="../js/toastr.min.js"></script>
+
+    <script>
+      window.jQuery ||
+        document.write(
+          decodeURIComponent('%3Cscript src="js/jquery.min.js"%3E%3C/script%3E')
+        );
+    </script>
+
+    <link rel="stylesheet" type="text/css" href="../css/dx.light.css" />
+    <script src="../js/dx.all.js"></script>
+    <script src="../js/moment.min.js"></script>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../css/lifting-amendment-detail-view-one.css"
+    />
+    <link rel="stylesheet" type="text/css" href="../css/styles.css" />
+    <script type="text/javascript" src="../js/Chart.min.js"></script>
+
+    <style>
+      .dx-datagrid-headers .dx-datagrid-table .dx-row > td {
+        text-align: center !important;
+      }
+    </style>
+  </head>
+  <body class="dx-viewport">
+    <div id="allComments"></div>
+
+    <div id="popup">
+      <div id="popup-textarea-container"></div>
+      <div id="popup-submit-button"></div>
+    </div>
+
+    <header id="app-header">
+      <a href="./lifting-amendment.html"><i class="fa fa-home fa-2x"></i></a>
+      <div class="ml-2 title">
+        Lifting Amendment Simulator&nbsp;
+        <span class="" id="datepicker1"></span>
+      </div>
+      <img src="../img/SA_logo.jpg" alt="logo" class="logo" />
+    </header>
+
+    <div class="header-border"></div>
+
+    <div class="overlay">
+      <svg
+        class="hourglass-icon"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 120 206"
+        preserveAspectRatio="none"
+      >
+        <path
+          class="middle"
+          d="M120 0H0v206h120V0zM77.1 133.2C87.5 140.9 92 145 92 152.6V178H28v-25.4c0-7.6 4.5-11.7 14.9-19.4 6-4.5 13-9.6 17.1-17 4.1 7.4 11.1 12.6 17.1 17zM60 89.7c-4.1-7.3-11.1-12.5-17.1-17C32.5 65.1 28 61 28 53.4V28h64v25.4c0 7.6-4.5 11.7-14.9 19.4-6 4.4-13 9.6-17.1 16.9z"
+        />
+        <path
+          class="outer"
+          d="M93.7 95.3c10.5-7.7 26.3-19.4 26.3-41.9V0H0v53.4c0 22.5 15.8 34.2 26.3 41.9 3 2.2 7.9 5.8 9 7.7-1.1 1.9-6 5.5-9 7.7C15.8 118.4 0 130.1 0 152.6V206h120v-53.4c0-22.5-15.8-34.2-26.3-41.9-3-2.2-7.9-5.8-9-7.7 1.1-2 6-5.5 9-7.7zM70.6 103c0 18 35.4 21.8 35.4 49.6V192H14v-39.4c0-27.9 35.4-31.6 35.4-49.6S14 81.2 14 53.4V14h92v39.4C106 81.2 70.6 85 70.6 103z"
+        />
+      </svg>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row align-items-center justify-content-between mt-2">
+        <div
+          class="col-auto bottom-buttons d-flex align-items-center flex-shrink-0"
+        >
+          <button
+            id="openButton"
+            class="btn btn-primary icon-btn-square"
+            title="Open"
+          >
+            <i class="fa fa-folder-open"></i>
+          </button>
+          <button
+            class="btn btn-primary icon-btn-square"
+            id="saveButton"
+            title="Save"
+          >
+            <i class="fa fa-save"></i>
+          </button>
+          <button
+            id="saveAsButton"
+            class="btn btn-primary icon-btn-square"
+            title="Save As"
+          >
+            <i class="fa fa-copy"></i>
+          </button>
+        </div>
+
+        <div class="col-auto d-flex align-items-center ml-2 flex-shrink-0">
+          <button
+            id="btnOpeningInventory"
+            class="btn btn-outline-info icon-btn-square"
+            title="Opening Inventory"
+          >
+            <i class="fa fa-archive"></i>
+          </button>
+          <button
+            id="btnWorkingCapacity"
+            class="btn btn-outline-info icon-btn-square"
+            title="Working Capacity"
+          >
+            <i class="fa fa-industry"></i>
+          </button>
+          <button
+            id="btnInventoryPlanning"
+            class="btn btn-outline-info icon-btn-square"
+            title="Inventory Planning %"
+          >
+            <i class="fa fa-percent"></i>
+          </button>
+        </div>
+
+        <div class="col-auto button-group">
+          <button class="btn btn-xs btn-success" disabled>
+            Fetch Latest Data
+          </button>
+          <button class="btn btn-xs btn-info" disabled>
+            Fetch GOSP Simulated Avails
+          </button>
+          <button class="btn btn-xs btn-warning" disabled>
+            Compare Simulated Closing
+          </button>
+          <button class="btn btn-xs btn-danger" disabled>
+            Find Spot Opportunity
+          </button>
+          <button class="btn btn-xs btn-secondary" disabled>
+            Optimize Customer Amendment Requests
+          </button>
+          <button class="btn btn-xs btn-dark">
+            Select Customer Amendment Requests
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="separator-line"></div>
+
+    <!-- KPIs and Buttons Section -->
+    <div class="container-fluid mt-3">
+      <div class="row align-items-center justify-content-between gx-2">
+        <!-- KPI Scroll Section -->
+        <div class="col overflow-auto ml-3" id="kpiScrollContainer">
+          <!-- KPI cards will be injected dynamically -->
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="col-auto d-flex align-items-center gap-20">
+          <button
+            id="changeUnitBtn"
+            class="btn btn-xs btn-info"
+            title="Change Unit"
+          >
+            Change Unit
+          </button>
+          <button
+            class="btn btn-xs btn-outline-info"
+            title="Print to PDF"
+            id="printToPDF"
+          >
+            <i class="fa fa-print me-1"></i> PDF
+          </button>
+          <button
+            class="btn btn-xs btn-outline-warning"
+            title="Reset Adjustments"
+            id="resetAdjustmentsBtn"
+          >
+            <i class="fa fa-undo me-1"></i> Reset Adjustments
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🔁 Reset Confirmation Modal -->
+    <div
+      class="modal fade"
+      id="resetAdjustmentsConfirmModal"
+      tabindex="-1"
+      aria-labelledby="resetAdjustmentsConfirmLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-warning text-dark">
+            <h5 class="modal-title" id="resetAdjustmentsConfirmLabel">
+              Confirm Reset
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to reset all adjustments? This action cannot
+            be undone.
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="btn btn-warning"
+              id="confirmResetAdjustmentsBtn"
+            >
+              Yes, Reset
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Change Unit Modal -->
+    <div
+      class="modal fade"
+      id="changeUnitModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="changeUnitModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="changeUnitModalLabel">Change Unit</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!-- Unit selection dropdown -->
+            <div class="form-group">
+              <label for="unitSelect">Select Unit:</label>
+              <select id="unitSelect" class="form-control">
+                <option value="MB" selected>MB</option>
+                <option value="KMT">KMT</option>
+                <option value="BBL">BBL</option>
+              </select>
+            </div>
+            <!-- Table for factor inputs -->
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Factor</th>
+                </tr>
+              </thead>
+              <tbody id="unitFactorTableBody">
+                <!-- Rows will be populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success" id="saveUnitChanges">
+              Save
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="updateUnitChanges"
+            >
+              Update
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main DataGrid -->
+    <div class="container-fluid mt-3">
+      <div class="row">
+        <div class="col">
+          <div id="tabpanel">
+            <div id="liftingAmendmentGrid"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Opening Inventory Modal -->
+    <div class="modal fade" id="openingInventoryModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5>Opening Inventory</h5>
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+          </div>
+          <div class="modal-body">
+            <div id="openingInventoryGrid"></div>
+          </div>
+          <div class="modal-footer">
+            <button
+              class="btn btn-sm btn-outline-danger"
+              id="resetOpeningInventory"
+            >
+              <i class="fa fa-undo mr-1"></i> Reset
+            </button>
+            <button
+              class="btn btn-sm btn-outline-success"
+              id="saveOpeningInventory"
+            >
+              <i class="fa fa-save mr-1"></i> Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Working Capacity Modal -->
+    <div class="modal fade" id="workingCapacityModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5>Working Capacity</h5>
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+          </div>
+          <div class="modal-body">
+            <div id="workingCapacityGrid"></div>
+          </div>
+          <div class="modal-footer">
+            <button
+              class="btn btn-sm btn-outline-danger"
+              id="resetWorkingCapacity"
+            >
+              <i class="fa fa-undo mr-1"></i> Reset
+            </button>
+            <button
+              class="btn btn-sm btn-outline-success"
+              id="saveWorkingCapacity"
+            >
+              <i class="fa fa-save mr-1"></i> Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inventory Planning Modal -->
+    <div class="modal fade" id="inventoryPlanningModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5>Inventory Planning %</h5>
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+          </div>
+          <div class="modal-body">
+            <div id="inventoryPlanningGrid"></div>
+          </div>
+          <div class="modal-footer">
+            <button
+              class="btn btn-sm btn-outline-danger"
+              id="resetInventoryPlanning"
+            >
+              <i class="fa fa-undo mr-1"></i> Reset
+            </button>
+            <button
+              class="btn btn-sm btn-outline-success"
+              id="saveInventoryPlanning"
+            >
+              <i class="fa fa-save mr-1"></i> Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SAVE AS POPUP -->
+    <div
+      class="modal fade"
+      id="saveAsModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="saveAsModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Save As</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span>&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="saveAsForm">
+              <div class="form-group">
+                <label for="saveName">Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="saveName"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="saveDescription">Description</label>
+                <textarea
+                  class="form-control"
+                  id="saveDescription"
+                  rows="3"
+                ></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button
+              id="saveAsSubmitBtn"
+              type="submit"
+              form="saveAsForm"
+              class="btn btn-primary"
+            >
+              <span
+                class="spinner-border spinner-border-sm d-none"
+                role="status"
+                aria-hidden="true"
+                id="saveAsLoadingSpinner"
+              ></span>
+              <span id="saveAsBtnText">Save</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPEN DROPDOWN -->
+    <div
+      class="modal fade"
+      id="openVersionModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="openVersionModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Open Saved Version</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span>&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="versionSelect">Select a Version</label>
+              <select class="form-control" id="versionSelect"></select>
+            </div>
+            <div
+              id="noVersionsMessage"
+              class="text-muted"
+              style="display: none"
+            >
+              No saved versions available.
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button
+              id="confirmOpenVersion"
+              type="button"
+              class="btn btn-primary"
+            >
+              Open
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADJUSTED NOMINATION POPUP -->
+    <div
+      class="modal fade"
+      id="adjustedNominationsModal"
+      tabindex="-1"
+      role="dialog"
+    >
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Adjusted Nominations Details</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <table class="table table-bordered table-sm text-center">
+              <thead>
+                <tr>
+                  <th>Nomination Number</th>
+                  <th>Customer</th>
+                  <th>Ship</th>
+                  <th>Original Date</th>
+                  <th>New Date</th>
+                  <th>Action</th>
+                  <th>Reset</th>
+                </tr>
+              </thead>
+              <tbody id="adjustedNominationsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Customer Amendment Requests Modal -->
+    <div
+      class="modal fade"
+      id="customerAmendmentModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Customer Amendment Requests</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span>&times;</span>
+            </button>
+          </div>
+          <div class="modal-body p-0">
+            <div class="amendment-table-wrapper">
+              <table
+                id="customerAmendmentTable"
+                class="table table-striped mb-0"
+              >
+                <thead>
+                  <tr>
+                    <th>Nomination Details</th>
+                    <th>Original Date &amp; Qty</th>
+                    <th>Revised Date &amp; Qty</th>
+                    <th>Requested Type</th>
+                    <th>
+                      Apply Both <input type="checkbox" id="checkAllBoth" />
+                    </th>
+                    <th>
+                      Apply Quantity <input type="checkbox" id="checkAllQty" />
+                    </th>
+                    <th>
+                      Apply Date Change
+                      <input type="checkbox" id="checkAllDate" />
+                    </th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button id="sendEmailBtn" class="btn btn-success">
+              SEND EMAIL
+            </button>
+            <button id="viewInScenarioBtn" class="btn btn-primary">
+              VIEW IN SCENARIO
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              id="closeUnitModalBtn"
+              data-dismiss="modal"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ask Me Button -->
+    <div id="chat-launcher">🤖 Ask Me</div>
+
+    <!-- Chatbot Panel -->
+    <div id="chatbot-panel">
+      <div id="chat-header">🤖 Lifty<span id="chat-close">×</span></div>
+      <div id="chat-log"></div>
+
+      <!-- Typing Indicator -->
+      <div id="typing-indicator" class="bot" style="display: none">
+        <em
+          >AI is typing<span class="dot">.</span><span class="dot">.</span
+          ><span class="dot">.</span></em
+        >
+      </div>
+
+      <div id="chat-input-area">
+        <div id="chat-input"></div>
+        <div id="chat-send"></div>
+      </div>
+    </div>
+
+    <!-- 🧠 Load Chatbot LLM -->
+    <script type="module" src="../chatbot-app/load-xenova.js"></script>
+    <script type="module" src="../chatbot-app/main.js"></script>
+
+    <!-- 💬 Chatbot UI Styles -->
+    <link rel="stylesheet" href="../chatbot-app/assets/style.css" />
+
+    <!-- ✅ Chatbot Toggle Script (Place this AFTER the above scripts) -->
+    <script>
+      document.getElementById("chat-launcher").addEventListener("click", () => {
+        const panel = document.getElementById("chatbot-panel");
+        panel.style.display = panel.style.display === "none" ? "block" : "none";
+      });
+
+      document.getElementById("chat-close").addEventListener("click", () => {
+        document.getElementById("chatbot-panel").style.display = "none";
+      });
+    </script>
+    <script
+      type="module"
+      src="../js/lifting-amendment-detail-view-two.js"
+    ></script>
+  </body>
+</html>

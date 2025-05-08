@@ -1,0 +1,32 @@
+{
+  "areas": [
+    {
+      "name": "Qatif",
+      "product_groups": [
+        {
+          "name": "Crude",
+          "products": ["AXL", "AL", "AM", "AH"]
+        },
+        {
+          "name": "NG",
+          "products": ["A-010"]
+        }
+      ],
+      "gosps": ["GOSP1", "GOSP2", "GOSP3", "GOSP4", "GOSP5"]
+    },
+    {
+      "name": "Abqaiq",
+      "product_groups": [
+        {
+          "name": "Crude",
+          "products": ["AXL", "AL"]
+        },
+        {
+          "name": "Refined Oil",
+          "products": ["A-863", "A-864"]
+        }
+      ],
+      "gosps": ["GOSP3", "GOSP4"]
+    }
+  ]
+}

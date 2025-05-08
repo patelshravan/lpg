@@ -1,0 +1,455 @@
+#app-header .title {
+  font-size: 1rem !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* Unified Icon Buttons */
+.icon-btn-square {
+  width: 30px;
+  height: 35px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  transition: 0.2s all ease-in-out;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 0;
+  margin-right: 8px;
+}
+
+.icon-btn-square:last-child {
+  margin-right: 0;
+}
+
+.icon-btn-square i {
+  font-size: 1.2rem;
+}
+
+/* Optional: Blue variant */
+.icon-btn-square.btn-primary {
+  background-color: #007bff;
+  color: white;
+  border: none;
+}
+
+.icon-btn-square.btn-outline-info {
+  color: #17a2b8;
+  border: 2px solid #17a2b8;
+  background-color: white;
+}
+
+.icon-btn-square:hover {
+  transform: scale(1.05);
+}
+
+.btn {
+  border-radius: 4px;
+  transition: 0.3s all ease-in-out;
+  min-width: 4vw;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+}
+
+/* Main Buttons (Centered & Dynamic Sizing) */
+/* Explicit Reset for Buttons */
+.btn {
+  border-radius: 6px;
+  transition: 0.3s ease-in-out;
+  font-size: 0.78rem;
+  padding: 4px 8px;
+  min-width: 3.5vw; /* Smaller min-width */
+}
+
+/* Button Groups */
+.button-group,
+.bottom-buttons {
+  display: flex;
+  gap: 6px !important;
+  flex-wrap: nowrap !important;
+  align-items: center;
+}
+
+/* Bottom button icons */
+.btn-xs i {
+  font-size: 0.82rem !important;
+}
+
+/* Hide scrollbar for webkit browsers */
+.overflow-auto::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.overflow-auto {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Remove unnecessary responsive min-width causing stretching */
+@media (max-width: 1200px) {
+  .btn-xs {
+    font-size: 0.6rem !important;
+    padding: 2px 5px !important;
+  }
+}
+
+@media (max-width: 992px) {
+  .btn-xs {
+    font-size: 0.55rem !important;
+    padding: 2px 4px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .button-group,
+  .bottom-buttons {
+    flex-direction: column;
+    gap: 3px !important;
+  }
+  .btn-xs {
+    width: 100% !important;
+    text-align: center !important;
+  }
+}
+
+/* Separator Line */
+.separator-line {
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(to right, #4caf50, #2196f3, #ff9800, #f44336);
+  border-radius: 50px;
+  margin: 15px 0;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Model CSS */
+/* Only target the Working Capacity modal */
+#workingCapacityModal .modal-dialog {
+  max-width: 700px; /* Previously 95vw */
+  max-height: 85vh; /* Reduce height */
+  margin: 50px auto;
+}
+
+#workingCapacityModal .modal-content {
+  height: auto; /* Let it size based on content */
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+#workingCapacityModal .modal-body {
+  flex: 1;
+  overflow-y: auto; /* Add scroll if needed */
+  padding: 10px;
+  overflow: hidden;
+}
+
+#workingCapacityGrid {
+  width: 100% !important;
+}
+
+/* KPIs Cards */
+.kpi-card {
+  flex: 0 0 auto;
+  min-width: 220px;
+  max-width: 240px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  padding: 16px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: 0.3s all ease-in-out;
+}
+
+.kpi-card:hover {
+  transform: translateY(-2px);
+}
+
+/* KPI Title */
+.kpi-card .card-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #2e7d32;
+  margin-bottom: 10px;
+}
+
+/* KPI Value */
+.kpi-value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #039be5;
+  margin-bottom: 8px;
+}
+
+#kpiScrollContainer {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 16px; /* Better spacing between cards */
+  overflow-x: auto;
+  padding: 10px 0;
+  scrollbar-width: none;
+}
+
+#kpiScrollContainer::-webkit-scrollbar {
+  display: none;
+}
+
+/* Drag-to-scroll (touch + mouse) */
+#kpiScrollContainer.grabbing {
+  cursor: grabbing;
+  user-select: none;
+}
+
+/* KPI Table Inside Card */
+.kpi-card table {
+  width: 100%;
+  font-size: 0.8rem;
+  margin: 0 auto;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.kpi-card th,
+.kpi-card td {
+  padding: 4px 4px;
+  text-align: center;
+  font-weight: 500;
+  word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 40px;
+}
+
+@media (max-width: 768px) {
+  .kpi-card table {
+    font-size: 0.75rem;
+  }
+
+  .kpi-card th,
+  .kpi-card td {
+    padding: 2px;
+    min-width: 36px;
+  }
+
+  .kpi-card {
+    height: auto;
+    padding: 8px;
+  }
+}
+
+/* Apply light yellow background to Adjustment columns */
+.yellow-bg {
+  background-color: #f6edc8 !important; /* Light yellow */
+  padding: 18px;
+}
+
+/* Header and cell borders */
+.dx-datagrid-headers .dx-datagrid-table td,
+.dx-datagrid-headers .dx-datagrid-table th {
+  border: 1.5px solid #666 !important;
+}
+
+/* Row separators (Horizontal lines) */
+.dx-datagrid-rowsview .dx-row > td {
+  border-bottom: 1.5px solid #999 !important;
+}
+
+/* Column separators (Vertical lines) */
+.dx-datagrid-headers .dx-datagrid-table td,
+.dx-datagrid-rowsview .dx-datagrid-table td {
+  border-right: 1.5px solid #333 !important;
+}
+
+/* Table border */
+.dx-datagrid-headers,
+.dx-datagrid-borders {
+  border-color: #555 !important;
+  border-width: 1.5px !important;
+}
+
+/* Make group headers (AL, AM, AH, Summary) cleanly centered */
+.dx-datagrid-headers .dx-row > td {
+  text-align: center !important;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* Remove thick black outline if any */
+.dx-datagrid-headers .dx-datagrid-table,
+.dx-datagrid-borders .dx-datagrid-table {
+  box-shadow: none !important;
+  border-collapse: collapse;
+}
+
+/* ---------------- Progress Bar Styling ---------------- */
+
+/* Progress Bar Styling */
+.progress-container {
+  width: 100%;
+  height: 20px;
+  background: #e0e0e0; /* Default background */
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Progress bar styles */
+.progress-bar {
+  height: 100%;
+  text-align: center;
+  line-height: 20px;
+  border-radius: 4px;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+/* Green progress bar */
+.green-bar {
+  background: #4caf50;
+  color: white;
+}
+
+/* Red progress bar */
+.red-bar {
+  background: #ff5252;
+  color: white;
+}
+
+/* Text inside progress bar */
+.progress-text {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  font-weight: bold;
+  top: 50%;
+  transform: translateY(-50%);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Slight contrast */
+}
+
+/* For very small progress (low value), set text color to black */
+.low-value .progress-text {
+  color: black !important;
+  font-weight: bold;
+}
+
+/* ---------------- Date Clickable (Dropdown) ---------------- */
+
+/* Clickable date with dropdown icon */
+.date-link {
+  color: #007bff;
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Adds spacing between the number and icon */
+}
+
+/* Dropdown icon styling */
+.dropdown-icon {
+  font-size: 12px;
+  color: #007bff;
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Rotate dropdown when expanded */
+.date-link.expanded .dropdown-icon {
+  transform: rotate(180deg);
+}
+
+/* ---------------- Detail Card Styling ---------------- */
+
+/* Detail card container */
+.detail-card {
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+  margin: 10px;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Detail card header */
+.detail-header {
+  font-size: 16px;
+  font-weight: bold;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+
+/* Detail content */
+.detail-content p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #333;
+}
+
+/* ---------------- Table Adjustments ---------------- */
+
+/* Prevent entire page from scrolling */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+#liftingAmendmentGrid {
+  height: calc(100vh - 320px) !important;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Hide the outer scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #aaa;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f0f0f0;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+/* make the dialog almost full‑height */
+.modal-dialog-scrollable {
+  max-width: 90vw; /* wide but with some margin */
+  margin: 1rem auto; /* top/bottom margins */
+  height: 90vh; /* almost full viewport height */
+}
+
+/* constrain the table wrapper inside the body */
+.amendment-table-wrapper {
+  max-height: calc(90vh - 120px); /* subtract header+footer (~120px) */
+  overflow-y: auto; /* inner scroll */
+}
+
+/* hide outer page scrollbar when modal is open */
+body.modal-open {
+  overflow: hidden;
+}

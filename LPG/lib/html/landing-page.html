@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Landing Page</title>
+
+    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+
+    <link rel="stylesheet" href="../css/bootstrap-datepicker.min.css" />
+
+    <link rel="stylesheet" href="../css/custom.css" />
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/landing-page.css" />
+    <link rel="stylesheet" href="../css/fontawesome.min.css" />
+
+    <script src="../js/jquery.min.js"></script>
+    <!-- Toast -->
+    <link rel="stylesheet" href="../css/toastr.min.css" />
+    <script src="../js/toastr.min.js"></script>
+
+    <link rel="stylesheet" href="../css/styles.css" />
+  </head>
+
+  <body>
+    <header id="app-header">
+      <div class="ml-4 title">Welcome</div>
+      <img src="../img/SA_logo.jpg" alt="logo" class="logo" />
+    </header>
+    <div class="header-border mb-4"></div>
+
+    <div class="container-custom mt-5">
+      <div class="row justify-content-center">
+        <!-- Left Side: Simulator -->
+        <div class="col-md-5 text-center d-flex flex-column align-items-center">
+          <h2 class="mb-4">Simulator</h2>
+          <div class="icon-container mb-3">
+            <i class="fa fa-cogs fa-2x text-dark"></i>
+          </div>
+          <button
+            id="btnLiftingSimulator"
+            class="btn btn-primary btn-custom mb-3"
+          >
+            Inventory & Lifting Amendment Simulator
+          </button>
+          <button class="btn btn-primary btn-custom">GOSP Simulator</button>
+        </div>
+
+        <!-- Separator Line -->
+        <div class="col-md-1 d-flex justify-content-center align-items-center">
+          <div class="separator"></div>
+        </div>
+
+        <!-- Right Side: Reports -->
+        <div class="col-md-5 text-center d-flex flex-column align-items-center">
+          <h2 class="mb-4">Reports</h2>
+          <div class="border p-5 bg-light rounded shadow-sm w-100">
+            <p class="text-muted">No reports available</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/bootstrap.js"></script>
+    <script src="../js/bootstrap-datepicker.min.js"></script>
+    <script src="../js/moment.min.js"></script>
+    <script type="module" src="../js/landing-page.js"></script>
+  </body>
+</html>

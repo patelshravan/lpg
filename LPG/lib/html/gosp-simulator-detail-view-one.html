@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>GOSP Simulator</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    />
+
+    <link rel="stylesheet" href="../css/bootstrap.min.css" />
+
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="../css/fontawesome-all.min.css" />
+
+    <script>
+      window.jQuery ||
+        document.write(
+          decodeURIComponent('%3Cscript src="js/jquery.min.js"%3E%3C/script%3E')
+        );
+    </script>
+
+    <script src="../js/dx.all.js"></script>
+    <script src="../js/moment.min.js"></script>
+    <link rel="stylesheet" href="../css/dx.light.css" />
+    <link rel="stylesheet" href="../css/gosp-simulator-detail-view-one.css" />
+    <link rel="stylesheet" type="text/css" href="../css/styles.css" />
+    <script type="text/javascript" src="../js/Chart.min.js"></script>
+  </head>
+
+  <body>
+    <header id="app-header">
+      <a href="./gosp-simulator.html"><i class="fa fa-home fa-2x"></i></a>
+      <div class="ml-2 title">
+        GOSP Simulator 
+        <span class="" id="datepicker1"></span>
+      </div>
+      <img src="../img/SA_logo.jpg" alt="logo" class="logo" />
+    </header>
+    <div class="header-border"></div>
+
+    <div class="container">
+      <div class="table-container">
+        <div class="button-toolbar mb-3" id="actionButtons">
+          <button class="btn btn-primary btn-sm" title="Fetch Latest Data">
+            <i class="fas fa-sync-alt"></i>
+          </button>
+          <button class="btn btn-success btn-sm" title="Save">
+            <i class="fas fa-save"></i>
+          </button>
+          <button class="btn btn-info btn-sm" title="Save As">
+            <i class="fas fa-copy"></i>
+          </button>
+          <button class="btn btn-warning btn-sm" title="Compare Scenarios">
+            <i class="fas fa-balance-scale"></i>
+          </button>
+          <button class="btn btn-danger btn-sm" title="Notify OSPAS">
+            <i class="fas fa-bell"></i>
+          </button>
+          <button class="btn btn-secondary btn-sm" title="Open Scenario">
+            <i class="fas fa-folder-open"></i>
+          </button>
+        </div>
+        <div id="gospGrid1"></div>
+      </div>
+    </div>
+
+    <script src="../js/gosp-simulator-detail-view-one.js"></script>
+  </body>
+</html>

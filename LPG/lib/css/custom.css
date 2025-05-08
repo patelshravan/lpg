@@ -1,0 +1,19 @@
+.new-added-row td {
+  background-color: #c6f0ff !important;
+}
+
+.calendar-icon,
+.delete-icon,
+.cancel-icon {
+  cursor: pointer;
+}
+
+button.table-btn {
+  padding: 0;
+  background-color: none !important;
+  border: none;
+}
+
+.btn-group button {
+  background-color: #33b249 !important;
+}
