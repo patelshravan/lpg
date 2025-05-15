@@ -77,4 +77,18 @@ $(document).ready(function () {
         .text("Inventory & Lifting Amendment Simulator");
     }
   });
+
+  $("#btnGospSimulator").on("click", function () {
+    const button = $(this);
+    button.prop("disabled", true).text("Loading...");
+
+    try {
+      // Redirect to GOSP Simulator page
+      window.location.href = "gosp-simulator.html";
+    } catch (error) {
+      toastr.error("Failed to redirect to GOSP Simulator:\n" + error);
+      console.error("Error:", error);
+      button.prop("disabled", false).text("GOSP Simulator");
+    }
+  });
 });

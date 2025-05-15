@@ -331,6 +331,50 @@
       "VERSION_NO": 14
     },
     {
+      "PRODUCT_GROUP": "LPG",
+      "PRODUCT_GROUP_NAME": "LPG",
+      "PRODUCT_CODE": "A-180",
+      "PRODUCT_CODE_NAME": "A-180",
+      "LOCATION": "JNGL",
+      "LOCATION_NAME": "Ju'aymah NGL",
+      "USER_GROUP": "UG1",
+      "GROUPID": "UG1",
+      "VERSION_NO": 14
+    },
+    {
+      "PRODUCT_GROUP": "LPG",
+      "PRODUCT_GROUP_NAME": "LPG",
+      "PRODUCT_CODE": "A-190",
+      "PRODUCT_CODE_NAME": "A-190",
+      "LOCATION": "JNGL",
+      "LOCATION_NAME": "Ju'aymah NGL",
+      "USER_GROUP": "UG1",
+      "GROUPID": "UG1",
+      "VERSION_NO": 14
+    },
+    {
+      "PRODUCT_GROUP": "LPG",
+      "PRODUCT_GROUP_NAME": "LPG",
+      "PRODUCT_CODE": "A-200",
+      "PRODUCT_CODE_NAME": "A-200",
+      "LOCATION": "JNGL",
+      "LOCATION_NAME": "Ju'aymah NGL",
+      "USER_GROUP": "UG1",
+      "GROUPID": "UG1",
+      "VERSION_NO": 14
+    },
+    {
+      "PRODUCT_GROUP": "LPG",
+      "PRODUCT_GROUP_NAME": "LPG",
+      "PRODUCT_CODE": "A-210",
+      "PRODUCT_CODE_NAME": "A-210",
+      "LOCATION": "JNGL",
+      "LOCATION_NAME": "Ju'aymah NGL",
+      "USER_GROUP": "UG1",
+      "GROUPID": "UG1",
+      "VERSION_NO": 14
+    },
+    {
       "PRODUCT_GROUP": "CRUDE OIL",
       "PRODUCT_GROUP_NAME": "Crude Oil",
       "PRODUCT_CODE": "AXL",

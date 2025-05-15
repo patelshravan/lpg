@@ -250,30 +250,6 @@ td.table-warning {
   transform: translate(-7px, -6px);
 }
 
-/* fullcalendar */
-
-.fc-ltr .fc-basic-view .fc-day-top .fc-day-number {
-  font-size: 1.1rem;
-  float: none;
-  position: relative;
-  left: 20px;
-  top: 26px;
-  color: #6c6c6c;
-}
-
-.fc-row .fc-content-skeleton {
-  top: -14px;
-}
-
-.datepicker1 {
-  font-size: 1.1rem;
-  color: #ffffff;
-}
-
-.firstHeaderBar .title {
-  letter-spacing: 0.5px;
-}
-
 /* scenario planning with new header */
 #app-header {
   height: 55px;

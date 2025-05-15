@@ -9,6 +9,8 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
     />
 
+    <link rel="icon" type="image/x-icon" href="../img/favicon.ico" />
+
     <link rel="stylesheet" href="../css/bootstrap.min.css" />
     <link rel="stylesheet" href="../css/bootstrap-datepicker.min.css" />
 
@@ -442,7 +444,9 @@
           <div class="modal-body">
             <form id="saveAsForm">
               <div class="form-group">
-                <label for="saveName">Name</label>
+                <label for="saveName"
+                  >Name <span style="color: red">*</span></label
+                >
                 <input
                   type="text"
                   class="form-control"
@@ -599,7 +603,7 @@
               data-dismiss="modal"
               aria-label="Close"
             >
-              <span>&times;</span>
+              <span>×</span>
             </button>
           </div>
           <div class="modal-body p-0">
@@ -611,8 +615,6 @@
                 <thead>
                   <tr>
                     <th>Nomination Details</th>
-                    <th>Original Date &amp; Qty</th>
-                    <th>Revised Date &amp; Qty</th>
                     <th>Requested Type</th>
                     <th>
                       Apply Both <input type="checkbox" id="checkAllBoth" />

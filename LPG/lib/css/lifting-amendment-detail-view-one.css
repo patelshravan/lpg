@@ -19,6 +19,38 @@
   justify-content: center;
 }
 
+.nested-table {
+  margin: 5px 0 5px 20px;
+  width: calc(100% - 20px);
+  font-size: 12px;
+}
+.nested-table th,
+.nested-table td {
+  padding: 4px 8px;
+  text-align: center;
+  border: 1px solid #dee2e6;
+}
+.nested-table thead th {
+  background-color: #f8f9fa;
+  font-weight: bold;
+}
+.nomination-details {
+  cursor: pointer;
+  padding: 4px 0;
+}
+.toggle-icon {
+  font-size: 12px;
+  display: inline-block;
+  width: 16px;
+}
+.nested-table-wrapper {
+  margin-left: 16px;
+}
+
+#customerAmendmentTable input[type="checkbox"] {
+  cursor: pointer;
+}
+
 /* Unified Icon Buttons */
 .icon-btn-square {
   width: 30px;
@@ -172,8 +204,8 @@
 /* KPIs Cards */
 .kpi-card {
   flex: 0 0 auto;
-  min-width: 220px;
-  max-width: 240px;
+  min-width: 240px;
+  max-width: 280px;
   background-color: #ffffff;
   border-radius: 10px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
@@ -183,10 +215,36 @@
   flex-direction: column;
   justify-content: space-between;
   transition: 0.3s all ease-in-out;
+  overflow-x: auto; /* allow scroll if overflow */
 }
 
 .kpi-card:hover {
   transform: translateY(-2px);
+}
+
+.kpi-table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+  scrollbar-width: thin; /* for Firefox */
+  scrollbar-color: #c1c1c1 transparent;
+}
+
+/* WebKit-based browsers */
+.kpi-table-wrapper::-webkit-scrollbar {
+  height: 6px;
+}
+
+.kpi-table-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.kpi-table-wrapper::-webkit-scrollbar-thumb {
+  background-color: #b3b3b3;
+  border-radius: 3px;
+}
+
+.kpi-table-wrapper::-webkit-scrollbar-thumb:hover {
+  background-color: #888;
 }
 
 /* KPI Title */
@@ -226,22 +284,21 @@
 
 /* KPI Table Inside Card */
 .kpi-card table {
-  width: 100%;
-  font-size: 0.8rem;
-  margin: 0 auto;
+  width: max-content;
+  min-width: 100%;
+  font-size: 0.85rem;
   border-collapse: collapse;
-  table-layout: fixed;
+  table-layout: auto;
 }
 
 .kpi-card th,
 .kpi-card td {
-  padding: 4px 4px;
+  padding: 4px 6px;
   text-align: center;
   font-weight: 500;
-  word-wrap: break-word;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  min-width: 40px;
+  min-width: 60px;
+  white-space: nowrap;
+  word-break: break-word;
 }
 
 @media (max-width: 768px) {

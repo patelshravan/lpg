@@ -4,88 +4,164 @@ $(document).ready(function () {
   $.ajaxSetup({ cache: false });
 
   let customerAmendmentModalInstance = null;
+  let latestAmendmentRequests = [];
 
-  // 1) Open the modal & build the table
   $('.btn:contains("Select Customer Amendment Requests")').on("click", function () {
     const $tbody = $("#customerAmendmentTable tbody");
-
-    if ($tbody.length === 0) {
+    if (!$tbody.length) {
       console.error("Table body #customerAmendmentTable tbody not found in the DOM.");
       toastr.error("Table element not found. Please check the HTML structure.");
       return;
     }
-
     $tbody.empty();
 
-    $.ajax({
-      url: API_ENDPOINTS.CUSTOMER_AMENDMENT_REQUESTS,
-      method: "GET",
-      dataType: "json",
-      cache: false,
-      success: function (data) {
-        const amendmentRequests = data["CUSTOMERAMENDMENTREQUESTS"];
-        window.latestAmendmentRequests = amendmentRequests;
+    // 1) Grab the data you already fetched earlier:
+    const amendmentRequests = latestAmendmentRequests;
 
-        if (!Array.isArray(amendmentRequests)) {
-          toastr.error("Invalid data format.");
-          return;
-        }
+    // 2) Validate / empty message
+    if (!Array.isArray(amendmentRequests)) {
+      toastr.error("Invalid data format.");
+      return;
+    }
+    if (amendmentRequests.length === 0) {
+      $tbody.append("<tr><td colspan='5' class='text-center'>No amendment requests available.</td></tr>");
+      return;
+    }
 
-        if (amendmentRequests.length === 0) {
-          $tbody.append("<tr><td colspan='7' class='text-center'>No amendment requests available.</td></tr>");
-          return;
-        }
-
-        amendmentRequests.forEach((row) => {
-          const {
-            NOMINATION_NO,
-            SHIP_NAME,
-            DATE_VALUE,
-            SCHEDULED_QTY,
-            DATE_VALUE_ADJ,
-            SCHEDULED_QTY_ADJ
-          } = row;
-
-          const dateChanged = DATE_VALUE !== DATE_VALUE_ADJ;
-          const qtyChanged = SCHEDULED_QTY !== SCHEDULED_QTY_ADJ;
-          let type = "—";
-          if (dateChanged && qtyChanged) type = "Both Changed";
-          else if (dateChanged) type = "Date Changed";
-          else if (qtyChanged) type = "Qty Changed";
-
-          const $tr = $("<tr>")
-            .append(`<td>${NOMINATION_NO} / ${SHIP_NAME}</td>`)
-            .append(`<td>${DATE_VALUE} | ${SCHEDULED_QTY}</td>`)
-            .append(`<td>${DATE_VALUE_ADJ} | ${SCHEDULED_QTY_ADJ}</td>`)
-            .append(`<td>${type}</td>`)
-            .append(`<td><input type="checkbox" class="apply-both-checkbox" id="applyBoth_${NOMINATION_NO}" /></td>`)
-            .append(`<td><input type="checkbox" class="apply-qty-checkbox" id="applyQty_${NOMINATION_NO}" /></td>`)
-            .append(`<td><input type="checkbox" class="apply-date-checkbox" id="applyDate_${NOMINATION_NO}" /></td>`);
-
-          $tbody.append($tr);
-        });
-
-        $("#checkAllBoth").off("change").on("change", function () {
-          $(".apply-both-checkbox").prop("checked", this.checked);
-        });
-        $("#checkAllQty").off("change").on("change", function () {
-          $(".apply-qty-checkbox").prop("checked", this.checked);
-        });
-        $("#checkAllDate").off("change").on("change", function () {
-          $(".apply-date-checkbox").prop("checked", this.checked);
-        });
-
-        if (!customerAmendmentModalInstance) {
-          customerAmendmentModalInstance = new bootstrap.Modal(document.getElementById("customerAmendmentModal"));
-        }
-        customerAmendmentModalInstance.show();
-      },
-      error: function (xhr, status, error) {
-        console.error("Failed to load customer amendment requests:", status, error);
-        toastr.error("Failed to load amendment requests: " + error);
-        $tbody.append("<tr><td colspan='7' class='text-center'>Error loading data. Please try again.</td></tr>");
+    // 3) Group amendment requests by NOMINATION_NO
+    const groupedRequests = {};
+    amendmentRequests.forEach((row) => {
+      const { NOMINATION_NO, SHIP_NAME } = row;
+      const key = `${NOMINATION_NO}/${SHIP_NAME}`; // Unique key for nomination
+      if (!groupedRequests[key]) {
+        groupedRequests[key] = {
+          NOMINATION_NO,
+          SHIP_NAME,
+          requests: []
+        };
       }
+      groupedRequests[key].requests.push(row);
     });
+
+    // 4) Render rows for each grouped nomination
+    Object.values(groupedRequests).forEach((group) => {
+      const { NOMINATION_NO, SHIP_NAME, requests } = group;
+
+      let type = "—";
+      if (requests.length > 0) {
+        type = requests[0].REQUEST_TYPE || "—";
+      }
+
+      // Create the nested table with a row for each request (product)
+      const $nestedTableBody = $("<tbody>");
+      requests.forEach((row) => {
+        const {
+          PRODUCT_CODE_NAME,
+          SCHEDULED_QTY,
+          REQUESTED_QTY,
+          DATE_VALUE,
+          REQUESTED_DATE
+        } = row;
+        $nestedTableBody.append(`
+        <tr>
+          <td>${PRODUCT_CODE_NAME || "—"}</td>
+          <td>${SCHEDULED_QTY?.toLocaleString() || "—"}</td>
+          <td>${REQUESTED_QTY?.toLocaleString() || "—"}</td>
+          <td>${DATE_VALUE || "—"}</td>
+          <td>${REQUESTED_DATE || "—"}</td>
+        </tr>
+      `);
+      });
+
+      const $nestedTable = $("<table>")
+        .addClass("nested-table table table-bordered")
+        .hide()
+        .append(`
+        <thead>
+          <tr>
+            <th>Product Name</th>
+            <th colspan="2" class="text-center">Qty</th>
+            <th colspan="2" class="text-center">Date</th>
+          </tr>
+          <tr>
+            <th></th><th>Scheduled</th><th>Requested</th><th>Scheduled</th><th>Requested</th>
+          </tr>
+        </thead>
+      `)
+        .append($nestedTableBody);
+
+      const $tr = $("<tr>")
+        .attr("data-nomination-no", NOMINATION_NO)
+        .data("nominationNo", NOMINATION_NO)
+        .data("productCode", requests[0].PRODUCT_CODE).append(`
+          <td>
+            <div class="nomination-details d-flex align-items-center">
+              <span class="toggle-icon me-2" style="cursor: pointer;">▶</span>
+              <span class="nomination-text">${NOMINATION_NO} / ${SHIP_NAME}</span>
+            </div>
+            <div class="nested-table-wrapper"></div>
+          </td>
+        `)
+        .append(`<td>${type}</td>`)
+        .append(`<td><input type="checkbox" class="apply-both-checkbox" id="applyBoth_${NOMINATION_NO}" /></td>`)
+        .append(`<td><input type="checkbox" class="apply-qty-checkbox" id="applyQty_${NOMINATION_NO}" /></td>`)
+        .append(`<td><input type="checkbox" class="apply-date-checkbox" id="applyDate_${NOMINATION_NO}" /></td>`);
+
+      $tr.find(".nested-table-wrapper").append($nestedTable);
+      $tbody.append($tr);
+    });
+
+    // 5) Re-attach “check all” handlers
+    $("#checkAllBoth").off("change").on("change", () => {
+      $(".apply-both-checkbox").prop("checked", $("#checkAllBoth").is(":checked"));
+    });
+    $("#checkAllQty").off("change").on("change", () => {
+      $(".apply-qty-checkbox").prop("checked", $("#checkAllQty").is(":checked"));
+    });
+    $("#checkAllDate").off("change").on("change", () => {
+      $(".apply-date-checkbox").prop("checked", $("#checkAllDate").is(":checked"));
+    });
+
+    // disable buttons to start
+    $("#viewInScenarioBtn, #sendEmailBtn").prop("disabled", true);
+
+    $tbody
+      .add("#checkAllBoth, #checkAllQty, #checkAllDate")
+      .off("change", "input[type=checkbox]")
+      .on("change", "input[type=checkbox]", updateFooterButtons);
+
+    if (!customerAmendmentModalInstance) {
+      customerAmendmentModalInstance = new bootstrap.Modal(
+        document.getElementById("customerAmendmentModal")
+      );
+    }
+    customerAmendmentModalInstance.show();
+  });
+
+  // helper to toggle the footer buttons
+  function updateFooterButtons() {
+    const anyChecked = !!$(".apply-both-checkbox:checked, .apply-qty-checkbox:checked, .apply-date-checkbox:checked").length;
+    $("#viewInScenarioBtn, #sendEmailBtn").prop("disabled", !anyChecked);
+  }
+
+  // wire up ALL the checkboxes: the per-row ones AND the header “check all” boxes
+  $(document).off("change", "#checkAllBoth, #checkAllQty, #checkAllDate, .apply-both-checkbox, .apply-qty-checkbox, .apply-date-checkbox");
+  $(document).on(
+    "change",
+    "#checkAllBoth, #checkAllQty, #checkAllDate, .apply-both-checkbox, .apply-qty-checkbox, .apply-date-checkbox",
+    updateFooterButtons
+  );
+
+  // initialize once in case a header box was pre-checked
+  updateFooterButtons();
+
+  // Use event delegation for the dropdown toggle
+  $("#customerAmendmentTable").off("click", ".nomination-details").on("click", ".nomination-details", function () {
+    const $this = $(this);
+    const $icon = $this.find(".toggle-icon");
+    const $table = $this.next(".nested-table-wrapper").find(".nested-table");
+    $table.toggle();
+    $icon.text($table.is(":visible") ? "▼" : "▶");
   });
 
   $("#viewInScenarioBtn").off("click").on("click", function () {
@@ -93,71 +169,70 @@ $(document).ready(function () {
 
     $("#customerAmendmentTable tbody tr").each(function () {
       const $row = $(this);
-      const nominationText = $row.find("td:first").text().trim(); // NOM123 / Ship A
-      const [nominationNumber, shipName] = nominationText.split(" / ").map((s) => s.trim());
-
-      const originalDate = parseInt($row.find("td").eq(1).text().split("|")[0].trim());
-      const revisedDate = parseInt($row.find("td").eq(2).text().split("|")[0].trim());
-
-      const originalQty = parseFloat($row.find("td").eq(1).text().split("|")[1].trim()) || 0;
-      const revisedQty = parseFloat($row.find("td").eq(2).text().split("|")[1].trim()) || 0;
+      const nominationText = $row.find(".nomination-text").text().trim();
+      const [nominationNumber] = nominationText.split(" / ").map(s => s.trim());
 
       const applyBoth = $row.find(".apply-both-checkbox").is(":checked");
       const applyQty = $row.find(".apply-qty-checkbox").is(":checked");
       const applyDate = $row.find(".apply-date-checkbox").is(":checked");
-
       if (!(applyBoth || applyQty || applyDate)) return;
 
       let matchFound = false;
 
-      for (let row of liftingAmendmentData) {
-        if (!Array.isArray(row.nomination)) continue;
+      for (let parentRow of liftingAmendmentData) {
+        if (!Array.isArray(parentRow.nomination)) continue;
 
-        const nominationIndex = row.nomination.findIndex(
-          (n) => n.nominationNumber === nominationNumber
+        const nomIndex = parentRow.nomination.findIndex(
+          n => n.nominationNumber === nominationNumber
         );
-        if (nominationIndex === -1) continue;
+        if (nomIndex === -1) continue;
 
-        const match = row.nomination[nominationIndex];
+        const nomination = parentRow.nomination[nomIndex];
         matchFound = true;
 
-        // 🧮 Apply Qty
+        // ── APPLY QTY ──
         if (applyBoth || applyQty) {
-          const productKey = Object.keys(match).find((k) => k.startsWith("adjustedQty_"));
-          if (productKey) {
-            match[productKey] = revisedQty;
+          $row.find(".nested-table tbody tr").each(function () {
+            const $cells = $(this).find("td");
+            const productCode = $cells.eq(0).text().trim();
+            const revisedQty = parseFloat($cells.eq(2).text().replace(/,/g, "")) || 0;
+            const adjKey = `adjustedQty_${productCode}`;
+
+            nomination[adjKey] = revisedQty;
+
+            parentRow[`adjustment_${productCode}CL`] = parentRow.nomination
+              .reduce((sum, n) => sum + (n[adjKey] || 0), 0);
+          });
+        }
+
+        // ── APPLY DATE + MOVE ──
+        if (applyBoth || applyDate) {
+          const oldDay = parseInt($row.find(".nested-table tbody tr td").eq(3).text().replace(/\D/g, "")) || 0;
+          const newDay = parseInt($row.find(".nested-table tbody tr td").eq(4).text().replace(/\D/g, "")) || oldDay;
+          if (newDay !== oldDay) {
+            // splice out of old row
+            const moved = parentRow.nomination.splice(nomIndex, 1)[0];
+            moved.DATE_VALUE_ADJ = newDay;
+
+            // push into (or create) the newDay row
+            let targetRow = liftingAmendmentData.find(r => r.date === newDay);
+            if (!targetRow) {
+              targetRow = { date: newDay, id: "row_" + newDay, nomination: [] };
+              liftingAmendmentData.push(targetRow);
+            }
+            targetRow.nomination = targetRow.nomination || [];
+            targetRow.nomination.push(moved);
+
+            // recalc both rows
+            const p = moved.PRODUCT_CODE;
+            parentRow[`adjustment_${p}CL`] = parentRow.nomination
+              .reduce((s, n) => s + (n[`adjustedQty_${p}`] || 0), 0);
+            targetRow[`adjustment_${p}CL`] = targetRow.nomination
+              .reduce((s, n) => s + (n[`adjustedQty_${p}`] || 0), 0);
           }
         }
 
-        // 📅 Apply Date + Move logic
-        if ((applyBoth || applyDate) && revisedDate !== originalDate) {
-          // Remove from old row
-          const nomination = row.nomination.splice(nominationIndex, 1)[0];
-          nomination.DATE_VALUE_ADJ = revisedDate;
-
-          // Push to target row
-          let targetRow = liftingAmendmentData.find((r) => r.date === revisedDate);
-          if (!targetRow) {
-            targetRow = { date: revisedDate, id: "row_" + revisedDate, nomination: [] };
-            liftingAmendmentData.push(targetRow);
-          }
-          if (!Array.isArray(targetRow.nomination)) targetRow.nomination = [];
-          targetRow.nomination.push(nomination);
-
-          // Update customer lifting adjustments on both rows
-          const productKey = Object.keys(nomination).find((k) => k.startsWith("adjustedQty_"));
-          const product = productKey?.split("_")[1];
-          if (product) {
-            row[`adjustment_${product}CL`] = (row.nomination || []).reduce(
-              (sum, n) => sum + (n[`adjustedQty_${product}`] || 0), 0
-            );
-            targetRow[`adjustment_${product}CL`] = (targetRow.nomination || []).reduce(
-              (sum, n) => sum + (n[`adjustedQty_${product}`] || 0), 0
-            );
-          }
-        }
-
-        break; // Done for this row
+        break;  // done with this nomination
       }
 
       if (!matchFound) {
@@ -165,26 +240,79 @@ $(document).ready(function () {
       }
     });
 
-    if (missingNominations.length > 0) {
-      toastr.warning("Some nominations not found in scenario: " + missingNominations.join(", "));
+    if (missingNominations.length) {
+      toastr.warning("Some nominations not found: " + missingNominations.join(", "));
     } else {
       toastr.success("Scenario updated with selected amendment requests.");
     }
 
+    // recalc & redraw the main grid + KPIs
     updateLiftingGrid();
     renderAllKpiCards();
+
+    // ── NEW: force re-render of any open detail rows ──
+    const mainGrid = $("#liftingAmendmentGrid").dxDataGrid("instance");
+    mainGrid.getVisibleRows().forEach(rowInfo => {
+      if (mainGrid.isRowExpanded(rowInfo.key)) {
+        mainGrid.collapseRow(rowInfo.key);
+        mainGrid.expandRow(rowInfo.key);
+      }
+    });
+
+    // finally hide the modal
     if (customerAmendmentModalInstance) {
       customerAmendmentModalInstance.hide();
     }
   });
 
-  // footer button handlers
-  $("#sendEmailBtn").on("click", () => {
-    const selected = $(".apply-both-checkbox:checked")
+  $("#sendEmailBtn").off("click").on("click", async function () {
+    // build payload array
+    const payload = $(".apply-both-checkbox, .apply-qty-checkbox, .apply-date-checkbox")
       .closest("tr")
-      .map((_, tr) => $(tr).find("td:first").text())
-      .get();
-    console.log("Send email for:", selected);
+      .map((_, tr) => {
+        const $tr = $(tr);
+        const nominationNo = $tr.data("nominationNo");
+        const requestType = $tr.find("td").eq(1).text().trim();
+        return {
+          NOMINATION_NO: nominationNo,
+          REQUEST_TYPE: requestType,
+          APPLY_BOTH: $tr.find(".apply-both-checkbox").is(":checked") ? "1" : "0",
+          APPLY_QTY: $tr.find(".apply-qty-checkbox").is(":checked") ? "1" : "0",
+          APPLY_DATE: $tr.find(".apply-date-checkbox").is(":checked") ? "1" : "0"
+        };
+      }).get();
+
+    if (!payload.length) {
+      toastr.warning("Please select at least one nomination to email.");
+      return;
+    }
+
+    // ** LOG IT **
+    console.log("📤 Email payload:", JSON.stringify({ NOM_AMD_DATA: payload }, null, 2));
+
+    const $btn = $(this).prop("disabled", true).text("Sending…");
+    try {
+      const csrfToken = await fetchCSRFToken();
+      const res = await fetch(
+        `${BASE_URL}${API_ENDPOINTS.EMAIL_AMENDMENT}`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": csrfToken
+        },
+        body: JSON.stringify({ NOM_AMD_DATA: payload })
+      }
+      );
+      if (!res.ok) throw new Error(res.statusText);
+      await res.json();
+      toastr.success("Email request submitted successfully!");
+    } catch (err) {
+      console.error(err);
+      toastr.error("Failed to send email.");
+    } finally {
+      $btn.prop("disabled", false).text("SEND EMAIL");
+    }
   });
 
   let inventoryData = [];
@@ -255,39 +383,37 @@ $(document).ready(function () {
 
     liftingAmendmentData.forEach((row) => {
       if (!Array.isArray(row.nomination)) return;
-
       row.nomination.forEach((nom) => {
-        const allProductCodesInNom = new Set();
-
         Object.keys(nom).forEach((key) => {
-          if (
-            key.startsWith("scheduledQty_") ||
-            key.startsWith("adjustedQty_")
-          ) {
+          if (key.startsWith("scheduledQty_")) {
             const productCode = key.split("_")[1];
-            allProductCodesInNom.add(productCode);
+            const matchingRaw = (originalNominationList || []).find(
+              (n) =>
+                n.NOMINATION_NO === nom.nominationNumber &&
+                n.PRODUCT_CODE === productCode &&
+                Number(n.DATE_VALUE) === row.date
+            );
+
+            nominationAggregate.push({
+              VERSION_NO:
+                matchingRaw?.VERSION_NO ?? activeVersionFromReadAPI?.VERSION_NO ?? -1,
+              HISTORY_NO: matchingRaw?.HISTORY_NO ?? null,
+              PRODUCT_GROUP: matchingRaw?.PRODUCT_GROUP ?? selection.productGroupCode,
+              LOCATION: matchingRaw?.LOCATION ?? selection.locationCode,
+              MONTH_VALUE:
+                matchingRaw?.MONTH_VALUE ?? selection.month.replace(" ", "").toUpperCase(),
+              KS_ROW_NUM: matchingRaw?.KS_ROW_NUM ?? null,
+              DATE_VALUE: row.date,
+              DATE_VALUE_ADJ: nom.DATE_VALUE_ADJ ?? row.date,
+              NOMINATION_NO: nom.nominationNumber,
+              CUSTOMER_NAME: nom.customerName,
+              SHIP_NAME: nom.shipName,
+              PRODUCT_CODE: productCode,
+              SCHEDULED_QTY: nom[`scheduledQty_${productCode}`] || 0,
+              SCHEDULED_QTY_ADJ: nom[`adjustedQty_${productCode}`] || 0,
+              ACTUAL_QTY: matchingRaw?.ACTUAL_QTY ?? (nom[`scheduledQty_${productCode}`] || 0),
+            });
           }
-        });
-
-        allProductCodesInNom.forEach((productCode) => {
-          const originalMeta = originalNominationList.find(
-            (item) =>
-              item.NOMINATION_NO === nom.nominationNumber &&
-              item.PRODUCT_CODE === productCode
-          );
-
-          nominationAggregate.push({
-            ...(originalMeta || {}),
-            nominationNumber: nom.nominationNumber,
-            customerName: nom.customerName,
-            shipName: nom.shipName,
-            scheduledTotal: nom.scheduledTotal,
-            productCode: productCode,
-            SCHEDULED_QTY: nom[`scheduledQty_${productCode}`] || 0,
-            SCHEDULED_QTY_ADJ: nom[`adjustedQty_${productCode}`] || 0,
-            DATE_VALUE: originalMeta?.DATE_VALUE ?? row.date,
-            DATE_VALUE_ADJ: nom.DATE_VALUE_ADJ ?? row.date,
-          });
         });
       });
     });
@@ -334,6 +460,23 @@ $(document).ready(function () {
       });
     });
 
+    const selectedAmendments = latestAmendmentRequests.map(original => {
+      const $tr = $(
+        `#customerAmendmentTable tbody tr[data-nomination-no="${original.NOMINATION_NO}"]`
+      );
+
+      const APPLY_BOTH = $tr.find(".apply-both-checkbox").is(":checked") ? "1" : "0";
+      const APPLY_QTY = $tr.find(".apply-qty-checkbox").is(":checked") ? "1" : "0";
+      const APPLY_DATE = $tr.find(".apply-date-checkbox").is(":checked") ? "1" : "0";
+
+      return {
+        ...original,
+        APPLY_BOTH,
+        APPLY_QTY,
+        APPLY_DATE
+      };
+    });
+
     const payload = {
       VERSION: activeVersionFromReadAPI,
       INVENTORY: inventoryData,
@@ -341,6 +484,7 @@ $(document).ready(function () {
       WORKING_CAPACITY: workingCapacityPayload,
       NOMINATION: nominationAggregate,
       MIN_MAX_PERCENTAGE: minMaxPercentageData,
+      NOM_AMD_DATA: selectedAmendments
     };
 
     console.log("📤 Final Save Payload:", payload);
@@ -488,6 +632,12 @@ $(document).ready(function () {
       return;
     }
 
+    // Check if the name already exists in savedVersions
+    if (savedVersions.some(version => version.name === name)) {
+      toastr.error("Version name already exists. Please choose a different name.");
+      return;
+    }
+
     // Show spinner and disable button
     $("#saveAsSubmitBtn").prop("disabled", true);
     $("#saveAsLoadingSpinner").removeClass("d-none");
@@ -542,11 +692,23 @@ $(document).ready(function () {
     if (openingInventoryData && Array.isArray(openingInventoryData)) {
       openingInventoryData.forEach((item) => {
         const { Date, ...productEntries } = item;
+        const dateDay = Number(Date);
+
         Object.entries(productEntries).forEach(([productCode, value]) => {
+          const meta = (inventoryData || []).find(
+            (inv) => inv.DATE_VALUE === dateDay && inv.PRODUCT_CODE === productCode
+          );
+
           transformedOpeningInventory.push({
-            Date,
-            productCode,
-            value,
+            VERSION_NO: meta?.VERSION_NO ?? activeVersionFromReadAPI?.VERSION_NO ?? -1,
+            HISTORY_NO: meta?.HISTORY_NO ?? null,
+            PRODUCT_GROUP: meta?.PRODUCT_GROUP ?? selection.productGroupCode,
+            LOCATION: meta?.LOCATION ?? selection.locationCode,
+            MONTH_VALUE: meta?.MONTH_VALUE ?? selection.month.replace(" ", "").toUpperCase(),
+            KS_ROW_NUM: meta?.KS_ROW_NUM ?? null,
+            DATE_VALUE: dateDay,
+            PRODUCT_CODE: productCode,
+            OPENING_INVENTORY: value || 0,
           });
         });
       });
@@ -564,6 +726,35 @@ $(document).ready(function () {
       });
     });
 
+    inventoryData = inventoryData.map((inv) => {
+      const date = inv.DATE_VALUE;
+      const product = inv.PRODUCT_CODE;
+      const matchingRow = liftingAmendmentData.find((r) => r.date === date);
+
+      return {
+        ...inv,
+        TERMINAL_AVAILS_ADJ: matchingRow?.[`adjustment_${product}TA`] || 0,
+        CUSTOMER_LIFTING_ADJ: matchingRow?.[`adjustment_${product}CL`] || 0,
+      };
+    });
+
+    const selectedAmendments = latestAmendmentRequests.map(original => {
+      const $tr = $(
+        `#customerAmendmentTable tbody tr[data-nomination-no="${original.NOMINATION_NO}"]`
+      );
+
+      const APPLY_BOTH = $tr.find(".apply-both-checkbox").is(":checked") ? "1" : "0";
+      const APPLY_QTY = $tr.find(".apply-qty-checkbox").is(":checked") ? "1" : "0";
+      const APPLY_DATE = $tr.find(".apply-date-checkbox").is(":checked") ? "1" : "0";
+
+      return {
+        ...original,
+        APPLY_BOTH,
+        APPLY_QTY,
+        APPLY_DATE
+      };
+    });
+
     const versionPayload = {
       VERSION: {
         VERSION_NO: -1,
@@ -575,7 +766,10 @@ $(document).ready(function () {
       WORKING_CAPACITY: workingCapacityPayload,
       NOMINATION: nominationAggregate,
       MIN_MAX_PERCENTAGE: minMaxPercentageData,
+      NOM_AMD_DATA: selectedAmendments
     };
+
+    console.log("📤 Save As Payload:", versionPayload);
 
     try {
       // Fetch CSRF token
@@ -590,7 +784,7 @@ $(document).ready(function () {
       }
 
       // Make API request
-      const response = await fetch(`${BASE_URL}${API_ENDPOINTS.SAVE}?_t=${Date.now()}`, {
+      const response = await fetch(`${BASE_URL}${API_ENDPOINTS.SAVE}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -607,6 +801,17 @@ $(document).ready(function () {
 
       const result = await response.json();
       console.log("✅ Save As Success:", result);
+
+      // ✅ Update active version info manually
+      activeVersionFromReadAPI = {
+        VERSION_NO: -1,
+        VERSION_NAME: name,
+        VERSION_DESCRIPTION: description,
+      };
+
+      // ✅ Update the header immediately
+      updateHeader(selection);
+
       toastr.success(`Saved as "${name}"`);
       $("#saveAsModal").modal("hide");
 
@@ -626,6 +831,7 @@ $(document).ready(function () {
     workingCapacityData = [],
     inventoryPlanningData = [],
     originalNominationList = [],
+    countriesData = [],
     productCountryMap = {};
 
   let originalOpeningInventoryData = [],
@@ -634,27 +840,28 @@ $(document).ready(function () {
 
   // Attach event to Change Unit button
   $("#changeUnitBtn").on("click", function () {
+    const nameMap = window.productNameMap || {};
+
     $("#unitFactorTableBody").empty();
 
     selection.products.forEach(function (product) {
+      const displayName = nameMap[product] || product;
       const key = `${product}_${currentUnit}`;
-      const backendFactor =
-        availableUOMData.find(
-          (item) =>
-            item.PRODUCT_CODE === product &&
-            item.CONVERSION_UNIT === currentUnit
+      const backendFactor = availableUOMData
+        .find(item =>
+          item.PRODUCT_CODE === product &&
+          item.CONVERSION_UNIT === currentUnit
         )?.CONVERSION_FACTOR || 1;
-
       const factor = userUpdatedUOMFactors[key] ?? backendFactor;
 
       $("#unitFactorTableBody").append(`
-          <tr>
-            <td>${product}</td>
-            <td>
-              <input type="text" class="form-control factor-input" value="${factor}" />
-            </td>
-          </tr>
-        `);
+      <tr>
+        <td>${displayName}</td>
+        <td>
+          <input type="text" class="form-control factor-input" value="${factor}" />
+        </td>
+      </tr>
+    `);
     });
 
     $("#unitSelect").val(currentUnit);
@@ -677,13 +884,13 @@ $(document).ready(function () {
           const factor = userUpdatedUOMFactors[key] ?? backendFactor;
 
           $("#unitFactorTableBody").append(`
-            <tr>
-              <td>${product}</td>
-              <td>
-                <input type="text" class="form-control factor-input" value="${factor}" />
-              </td>
-            </tr>
-          `);
+          <tr>
+            <td>${product}</td>
+            <td>
+              <input type="text" class="form-control factor-input" value="${factor}" />
+            </td>
+          </tr>
+        `);
         });
       });
 
@@ -811,6 +1018,13 @@ $(document).ready(function () {
 
       toastr.success("Unit conversion mapping applied.");
 
+      const productNameMap = {};
+      data.UOM.forEach(item => {
+        productNameMap[item.PRODUCT_CODE] = item.PRODUCT_CODE_NAME;
+      });
+      // save it globally so your grid init can see it
+      window.productNameMap = productNameMap;
+
       // INVENTORY
       liftingAmendmentData = [];
       data.INVENTORY.forEach((inv) => {
@@ -901,7 +1115,9 @@ $(document).ready(function () {
 
               const productField = `scheduledQty_${n.PRODUCT_CODE}`;
               const adjustedField = `adjustedQty_${n.PRODUCT_CODE}`;
+              const actualField = `actualQty_${n.PRODUCT_CODE}`;
 
+              nominationMap[nomNo][actualField] = n.ACTUAL_QTY || 0;
               nominationMap[nomNo][productField] = n.SCHEDULED_QTY;
               nominationMap[nomNo][adjustedField] = n.SCHEDULED_QTY_ADJ || 0;
               nominationMap[nomNo].scheduledTotal += n.SCHEDULED_QTY || 0;
@@ -972,11 +1188,10 @@ $(document).ready(function () {
         JSON.stringify(inventoryPlanningData)
       );
 
-      recalculateLiftingData();
-      console.log("🔍 MIN_MAX_PERCENTAGE loaded:", minMaxPercentageData);
-
-      initializeApp();
       storeOriginalNominationState();
+      recalculateLiftingData();
+      initializeApp();
+      renderAllKpiCards();
     } catch (error) {
       console.error("❌ handleReadApiData Failed:", error);
       toastr.error(`Failed to load response data.\n${error}`);
@@ -995,15 +1210,14 @@ $(document).ready(function () {
     });
     return res.headers.get("X-CSRF-TOKEN");
   }
-  let countriesData = [];
-  // ✅ Replace this at the top of your script (if not using ES modules)
+
   async function callReadAPIWithSelection(selection) {
     try {
       $("#loadingSpinner").show();
       // const csrfToken = await fetchCSRFToken();
 
       // const response = await fetch(
-      //   `${BASE_URL}${API_ENDPOINTS.READ}&_t=${Date.now()}`,
+      //   `${BASE_URL}${API_ENDPOINTS.READ}`,
       //   {
       //     method: "POST",
       //     headers: {
@@ -1026,9 +1240,18 @@ $(document).ready(function () {
       // }
       // const data = await response.json();
 
-      // ✅ Option 2: Local mock JSON instead of API
+      // Local mock JSON instead of API
       const response = await fetch(API_ENDPOINTS.LIFTING_AMENDMENT);
       const data = await response.json();
+
+      latestAmendmentRequests = data.NOM_AMD_DATA || [];
+
+      const productNameMap = {};
+      data.UOM.forEach(item => {
+        productNameMap[item.PRODUCT_CODE] = item.PRODUCT_CODE_NAME;
+      });
+
+      window.productNameMap = productNameMap;
 
       countriesData = data.COUNTRIES || [];
 
@@ -1131,11 +1354,14 @@ $(document).ready(function () {
                 };
               }
 
-              const productField = `scheduledQty_${n.PRODUCT_CODE}`;
-              const adjustedField = `adjustedQty_${n.PRODUCT_CODE}`;
+              const productCode = n.PRODUCT_CODE;
+              const productField = `scheduledQty_${productCode}`;
+              const adjustedField = `adjustedQty_${productCode}`;
+              const actualField = `actualQty_${productCode}`;
 
               nominationMap[nomNo][productField] = n.SCHEDULED_QTY;
               nominationMap[nomNo][adjustedField] = n.SCHEDULED_QTY_ADJ || 0;
+              nominationMap[nomNo][actualField] = n.ACTUAL_QTY || 0;
 
               nominationMap[nomNo].scheduledTotal += n.SCHEDULED_QTY || 0;
             });
@@ -1191,9 +1417,11 @@ $(document).ready(function () {
       originalOpeningInventoryData = JSON.parse(JSON.stringify(openingInventoryData));
       originalWorkingCapacityData = JSON.parse(JSON.stringify(workingCapacityData));
       originalInventoryPlanningData = JSON.parse(JSON.stringify(inventoryPlanningData));
+
+      storeOriginalNominationState();
       recalculateLiftingData();
       initializeApp();
-      storeOriginalNominationState();
+      renderAllKpiCards();
     } catch (error) {
       console.error("❌ read_api Call Failed:", error);
       toastr.error(`Failed to load data from backend.\n${error}`);
@@ -1282,6 +1510,17 @@ $(document).ready(function () {
 
       storeOriginalNominationState();
       renderAllKpiCards();
+
+      $(".apply-both-checkbox, .apply-qty-checkbox, .apply-date-checkbox").prop("checked", false);
+      $("#checkAllBoth, #checkAllQty, #checkAllDate").prop("checked", false);
+
+      latestAmendmentRequests.forEach(r => {
+        r.APPLY_BOTH = "0";
+        r.APPLY_QTY = "0";
+        r.APPLY_DATE = "0";
+      });
+
+      updateFooterButtons();
 
       toastr.success("All adjustments have been reset.");
     });
@@ -1566,7 +1805,7 @@ $(document).ready(function () {
         .off("click")
         .on("click", function () {
           const grid = $("#workingCapacityGrid").dxDataGrid("instance");
-          grid.saveEditData(); // ✅ Commit edits
+          grid.saveEditData();
 
           workingCapacityData = JSON.parse(JSON.stringify(tempWorkingCapacity));
           $("#workingCapacityModal").modal("hide");
@@ -1643,29 +1882,31 @@ $(document).ready(function () {
         }
       },
       onCellPrepared: function (e) {
-        if (e.rowType === "data") {
-          const rowDay = parseInt(e.data.Date, 10);
+        if (e.rowType !== "data") return;
 
-          // If the entire planning month is in the past…
-          if (planningDate < currentMonthDate) {
-            $(e.cellElement).css({
-              backgroundColor: "#eee",
-              color: "#999",
-              cursor: "not-allowed",
-            });
-          } else {
-            // For the current month, if the row is prior to today, style it as non-editable.
-            const isSameMonth =
-              planningDate.getFullYear() === today.getFullYear() &&
-              planningDate.getMonth() === today.getMonth();
-            if (isSameMonth && rowDay < today.getDate()) {
-              $(e.cellElement).css({
-                backgroundColor: "#eee",
-                color: "#999",
-                cursor: "not-allowed",
-              });
-            }
-          }
+        // full JS Date for this row
+        const cellDate = new Date(
+          parseInt(yearStr),
+          monthMap[monthStr],
+          Number(e.data.Date)
+        );
+        cellDate.setHours(0, 0, 0, 0);
+
+        const todayZero = new Date();
+        todayZero.setHours(0, 0, 0, 0);
+
+        if (cellDate < todayZero) {
+          // past rows → grey + block
+          $(e.cellElement).css({
+            backgroundColor: "#eee",
+            color: "#999",
+            cursor: "not-allowed",
+          });
+        } else {
+          // today/future → editable I-beam
+          $(e.cellElement).css({
+            cursor: "text",
+          });
         }
       },
       onContentReady: function () {
@@ -1678,12 +1919,6 @@ $(document).ready(function () {
     });
 
     function generateColumns() {
-      // For opening inventory, we want to always show the Date column
-      console.log(
-        "🔍 openingInventoryData before modal open",
-        openingInventoryData
-      );
-
       const dateCol =
         hasDate || selector === "#openingInventoryGrid"
           ? [
@@ -1725,7 +1960,7 @@ $(document).ready(function () {
           },
           ...selection.products.map((p) => ({
             dataField: p,
-            caption: p,
+            caption: window.productNameMap[p] || p,
             alignment: "center",
             editorType: "dxNumberBox",
             allowEditing: editingEnabled,
@@ -1746,41 +1981,44 @@ $(document).ready(function () {
                   unitConversionFactors[options.column.dataField]
                   ? unitConversionFactors[options.column.dataField]
                   : 1;
-              const converted = currentUnit === "MB" ? val : val / factor;
+              const converted = currentUnit === "MB" ? val : val * factor;
               $(container)
                 .css({ "background-color": "#f6edc8", "font-weight": "bold" })
-                .text(converted.toFixed(2));
+                .text(converted);
             },
           })),
         ]);
       }
 
       return dateCol.concat(
-        selection.products.map((p) => ({
-          dataField: p,
-          caption: p,
-          alignment: "center",
-          allowEditing:
-            hasDate || selector === "#openingInventoryGrid"
-              ? editingEnabled // only allow editing if editingEnabled is true
-              : false,
-          editorType: "dxNumberBox",
-          allowSorting: false,
-          editorOptions: {
-            min: 0,
-            showSpinButtons: false,
-            format: "#,##0.##",
-            inputAttr: {
-              style: "background-color: #f6edc8; font-weight: bold;",
+        selection.products.map((p) => {
+          const isWorkingCapacity = selector === "#workingCapacityGrid";
+          return {
+            dataField: p,
+            caption: window.productNameMap[p] || p,
+            alignment: "center",
+            allowEditing:
+              hasDate || selector === "#openingInventoryGrid"
+                ? editingEnabled
+                : false,
+            editorType: "dxNumberBox",
+            allowSorting: false,
+            editorOptions: {
+              // prevent negatives in Working Capacity
+              ...(isWorkingCapacity ? { min: 0 } : {}),
+              showSpinButtons: false,
+              format: "#,##0.##",
+              inputAttr: {
+                style: "background-color: #f6edc8; font-weight: bold;",
+              },
             },
-          },
-          cellTemplate(container, options) {
-            $(container)
-              .css({ "background-color": "#f6edc8", "font-weight": "bold" })
-              .text(Number(options.value || 0).toFixed(2));
-          },
+            cellTemplate(container, options) {
+              $(container)
+                .css({ "background-color": "#f6edc8", "font-weight": "bold" })
+                .text(Number(options.value || 0));
+            },
+          };
         }))
-      );
     }
   }
 
@@ -1854,17 +2092,6 @@ $(document).ready(function () {
         if (workingCap === 0) {
           console.log(`No working capacity found for day ${currentDay}, product ${product}. workingCapMap:`, workingCapMap);
         }
-
-        // Recalculate customer lifting from nominations (if present)
-        const calculatedCustomerLifting =
-          Array.isArray(row.nomination) && row.nomination.length > 0
-            ? row.nomination.reduce(
-              (sum, n) => sum + (Number(n[`scheduledQty_${product}`]) || 0),
-              0
-            )
-            : row[`customerLifting_${product}`] || 0;
-
-        row[`customerLifting_${product}`] = calculatedCustomerLifting;
       });
 
       // Ships & totals
@@ -1997,6 +2224,22 @@ $(document).ready(function () {
         );
       });
 
+      // ── sink the apply-flags in the Customer Amendment table ──
+      $(`#applyBoth_${nomId}, #applyQty_${nomId}, #applyDate_${nomId}`)
+        .prop("checked", false);
+
+      // ── clear them out in our in-memory requests so the payload builder skips them ──
+      latestAmendmentRequests
+        .filter(r => r.NOMINATION_NO === nomId)
+        .forEach(r => {
+          r.APPLY_BOTH = "0";
+          r.APPLY_QTY = "0";
+          r.APPLY_DATE = "0";
+        });
+
+      // ── refresh the footer buttons state ──
+      updateFooterButtons();
+
       // Recalculate and refresh
       recalculateLiftingData();
       $("#liftingAmendmentGrid").dxDataGrid("instance").refresh();
@@ -2042,6 +2285,7 @@ $(document).ready(function () {
   );
 
   function renderAllKpiCards() {
+    const nameMap = window.productNameMap || {};
     const container = $("#kpiScrollContainer").empty();
 
     // Total Cargoes per Product
@@ -2085,7 +2329,7 @@ $(document).ready(function () {
 
     // KPI: Total Cargoes
     const cargoesHeader = selection.products
-      .map((p) => `<th>${p}</th>`)
+      .map((p) => `<th>${nameMap[p] || p}</th>`)
       .join("");
 
     const cargoesValues = selection.products
@@ -2097,20 +2341,20 @@ $(document).ready(function () {
       .join("");
 
     container.append(`
-    <div class="kpi-card">
-      <div class="card-title">Total Cargoes</div>
-      <div class="kpi-table-wrapper">
-        <table class="table table-sm text-center mb-0">
-          <thead><tr>${cargoesHeader}</tr></thead>
-          <tbody><tr>${cargoesValues}</tr></tbody>
-        </table>
+      <div class="kpi-card">
+        <div class="card-title">Total Cargoes</div>
+          <div class="kpi-table-wrapper">
+            <table class="table table-sm text-center mb-0">
+              <thead><tr>${cargoesHeader}</tr></thead>
+              <tbody><tr>${cargoesValues}</tr></tbody>
+            </table>
+          </div>
       </div>
-    </div>
     `);
 
     // KPI: Violation Days per product (table)
     const violationHeader = violationPerProduct
-      .map((v) => `<th>${v.name}</th>`)
+      .map((v) => `<th>${nameMap[v.name] || v.name}</th>`)
       .join("");
     const violationValues = violationPerProduct
       .map(
@@ -2145,9 +2389,9 @@ $(document).ready(function () {
           : 1;
       return {
         name: p,
-        value: parseFloat(
-          currentUnit === "MB" ? rawValue : rawValue / factor
-        ).toFixed(2),
+        value: currentUnit === "MB"
+          ? rawValue
+          : rawValue * factor,
       };
     });
 
@@ -2164,45 +2408,49 @@ $(document).ready(function () {
           : 1;
       return {
         name: p,
-        value: currentUnit === "MB" ? rawValue : rawValue / factor,
+        value: currentUnit === "MB" ? rawValue : rawValue * factor,
       };
     });
 
     // Demand card
-    const demandHeader = demand.map((v) => `<th>${v.name}</th>`).join("");
-    const demandValues = demand
-      .map((v) => `<td><strong>${v.value.toLocaleString()}</strong></td>`)
+    const demandHeader = selection.products
+      .map(p => `<th>${nameMap[p] || p}</th>`)
+      .join("");
+    const demandValues = selection.products
+      .map(p => `<td><strong>${demand.find(d => d.name === p).value.toLocaleString()}</strong></td>`)
       .join("");
 
     container.append(`
-        <div class="kpi-card">
-          <div class="card-title">Demand (${currentUnit})</div>
-          <div class="kpi-table-wrapper">
-            <table class="table table-sm text-center mb-0">
-              <thead><tr>${demandHeader}</tr></thead>
-              <tbody><tr>${demandValues}</tr></tbody>
-            </table>
-          </div>
-        </div>
-      `);
+    <div class="kpi-card">
+      <div class="card-title">Demand (${currentUnit})</div>
+      <div class="kpi-table-wrapper">
+        <table class="table table-sm text-center mb-0">
+          <thead><tr>${demandHeader}</tr></thead>
+          <tbody><tr>${demandValues}</tr></tbody>
+        </table>
+      </div>
+    </div>
+  `);
 
     // Available card
-    const availHeader = available.map((v) => `<th>${v.name}</th>`).join("");
-    const availValues = available
-      .map((v) => `<td><strong>${v.value.toLocaleString()}</strong></td>`)
+    const availHeader = selection.products
+      .map(p => `<th>${nameMap[p] || p}</th>`)
+      .join("");
+    const availValues = selection.products
+      .map(p => `<td><strong>${available.find(a => a.name === p).value.toLocaleString()}</strong></td>`)
       .join("");
 
     container.append(`
-      <div class="kpi-card">
-        <div class="card-title">Available For Export (${currentUnit})</div>
-          <div class="kpi-table-wrapper">
-            <table class="table table-sm text-center mb-0">
-              <thead><tr>${availHeader}</tr></thead>
-              <tbody><tr>${availValues}</tr></tbody>
-            </table>
-          </div>
+    <div class="kpi-card">
+      <div class="card-title">Available For Export (${currentUnit})</div>
+      <div class="kpi-table-wrapper">
+        <table class="table table-sm text-center mb-0">
+          <thead><tr>${availHeader}</tr></thead>
+          <tbody><tr>${availValues}</tr></tbody>
+        </table>
       </div>
-    `);
+    </div>
+  `);
 
     // Count Adjusted Nominations (where any adjustedQty_<product> > 0)
     let dateChangedCount = 0;
@@ -2322,9 +2570,9 @@ $(document).ready(function () {
 
     const sectionTitles = [
       { key: "terminalAvails", title: "Terminal Avails" },
-      { key: "adjustment_TA", title: "Terminal Avails Adjustment" },
+      { key: "adjustment_TA", title: "Terminal Avails Adj." },
       { key: "customerLifting", title: "Customer Liftings" },
-      { key: "adjustment_CL", title: "Customer Liftings Adjustment" },
+      { key: "adjustment_CL", title: "Customer Liftings Adj." },
       { key: "closingInventory", title: "Closing Inventory" },
       { key: "closingPercentage", title: "Closing Percentage" },
     ];
@@ -2377,9 +2625,9 @@ $(document).ready(function () {
       fixed: true,
       fixedPosition: "right",
       columns: [
-        { dataField: "numberOfShips", caption: "Number of Ships", width: 140, allowEditing: false, allowSorting: false, format: "#,##0" },
-        { dataField: "totalLifting", caption: "Total Lifting", width: 100, allowEditing: false, allowSorting: false, format: "#,##0" },
-        { dataField: "liftingPer2Days", caption: "Lifting Per 2 Days", width: 140, allowEditing: false, allowSorting: false, format: "#,##0" },
+        { dataField: "numberOfShips", caption: "Number of Ships", alignment: "center", width: 125, allowEditing: false, allowSorting: false, format: "#,##0" },
+        { dataField: "totalLifting", caption: "Total Lifting", alignment: "center", width: 95, allowEditing: false, allowSorting: false, format: "#,##0" },
+        { dataField: "liftingPer2Days", caption: "Lifting Per 2 Days", alignment: "center", width: 130, allowEditing: false, allowSorting: false, format: "#,##0" },
       ],
     });
 
@@ -2393,11 +2641,12 @@ $(document).ready(function () {
 
       const columnConfig = {
         dataField: dataField,
-        caption: product,
+        caption: window.productNameMap[product] || product,
         alignment: "center",
         format: "#,##0",
         allowSorting: false,
         allowEditing: false,
+        width: 120,
       };
 
       if (sectionKey === "closingPercentage") {
@@ -2422,28 +2671,22 @@ $(document).ready(function () {
         columnConfig.cellTemplate = function (container, options) {
           const factor = unitConversionFactors[product] || 1;
           const val = options.value || 0;
-          const displayVal = currentUnit !== "MB"
-            ? (val / factor).toFixed(2).toLocaleString()
-            : Number(val).toFixed(2).toLocaleString();
-          $(container).text(displayVal);
+          const raw = val * (currentUnit === "MB" ? 1 : factor);
+          $(container).text(raw.toLocaleString());
         };
       } else if (sectionKey === "closingInventory") {
         columnConfig.cellTemplate = function (container, options) {
           const factor = unitConversionFactors[product] || 1;
           const val = options.value || 0;
-          const displayVal = currentUnit !== "MB"
-            ? (val / factor).toFixed(2).toLocaleString()
-            : Number(val).toFixed(2).toLocaleString();
-          $(container).text(displayVal);
+          const raw = val * (currentUnit === "MB" ? 1 : factor);
+          $(container).text(raw.toLocaleString());
         };
       } else if (sectionKey === "terminalAvails" || sectionKey === "customerLifting") {
         columnConfig.cellTemplate = function (container, options) {
           const factor = unitConversionFactors[product] || 1;
           const val = options.value || 0;
-          const displayVal = currentUnit !== "MB"
-            ? (val / factor).toFixed(2)
-            : Number(val).toFixed(2);
-          $(container).text(Number(displayVal).toLocaleString());
+          const raw = val * (currentUnit === "MB" ? 1 : factor);
+          $(container).text(raw.toLocaleString());
         };
       }
 
@@ -2500,28 +2743,76 @@ $(document).ready(function () {
       onCellPrepared: function (e) {
         if (
           e.rowType === "data" &&
-          e.column.dataField?.includes("adjustment_")
+          e.column.dataField?.startsWith("adjustment_")
         ) {
+          // build the full date for this row
           const monthIndex = monthMap[monthStr];
-          const rowDate = new Date(parseInt(yearStr), monthIndex, e.data.date);
+          const rowDate = new Date(
+            parseInt(yearStr),
+            monthIndex,
+            e.data.date
+          );
           rowDate.setHours(0, 0, 0, 0);
+
           const today = new Date();
           today.setHours(0, 0, 0, 0);
 
-          $(e.cellElement).css(
-            rowDate < today
-              ? { backgroundColor: "#eee", color: "#999" }
-              : { backgroundColor: "#f6edc8", fontWeight: "bold" }
-          );
+          if (rowDate < today) {
+            // past → grey & block
+            $(e.cellElement).css({
+              backgroundColor: "#eee",
+              color: "#999",
+              cursor: "not-allowed"
+            });
+          }
+          else {
+            // today/future → editable I-beam
+            $(e.cellElement).css({
+              backgroundColor: "#f6edc8",
+              fontWeight: "bold",
+              cursor: "text"
+            });
+          }
         }
       },
-      onRowUpdated: function (e) {
+      onEditorPreparing(e) {
+        if (
+          e.parentType === "dataRow" &&
+          /^adjustment_.+CL$/.test(e.dataField)
+        ) {
+          const m = e.dataField.match(/^adjustment_(.+)CL$/);
+          const product = m ? m[1] : null;
+
+          e.editorOptions.onValueChanged = (args) => {
+            const newTotal = Number(args.value) || 0;
+            const rowData = e.row.data;
+
+            rowData[e.dataField] = newTotal;
+
+            const noms = rowData.nomination || [];
+            const perNom = noms.length ? newTotal / noms.length : 0;
+            noms.forEach(n => {
+              n[`adjustedQty_${product}`] = perNom;
+            });
+
+            recalculateLiftingData(e.row.rowIndex);
+            const grid = $("#liftingAmendmentGrid").dxDataGrid("instance");
+            grid.refresh();
+            if (grid.isRowExpanded(rowData.id)) {
+              grid.collapseRow(rowData.id);
+              grid.expandRow(rowData.id);
+            }
+            renderAllKpiCards();
+          };
+        }
+      },
+      onRowUpdated(e) {
         const updatedRowIndex = liftingAmendmentData.findIndex(
           (r) => r.id === e.data.id
         );
         recalculateLiftingData(updatedRowIndex);
         $("#liftingAmendmentGrid").dxDataGrid("instance").refresh();
-        renderAllKpiCards(); // Ensure KPI reflects current state
+        renderAllKpiCards();
       },
       columns: generateColumns(selection.products),
       masterDetail: {
@@ -2562,14 +2853,35 @@ $(document).ready(function () {
             })
             .appendTo(container);
 
+          const actualColumns = selection.products.map((product) => ({
+            dataField: `actualQty_${product}`,
+            caption: window.productNameMap[product] || product,
+            width: 80,
+            alignment: "center",
+            allowEditing: false,
+            allowSorting: false,
+            format: "#,##0",
+            cellTemplate: (container, options) => {
+              const val = Number(options.value || 0);
+              $(container)
+                .css({ fontWeight: "bold" })
+                .text(val.toLocaleString());
+            },
+          }));
+
           const scheduledColumns = selection.products
             .map((product) => ({
               dataField: `scheduledQty_${product}`,
-              caption: product,
+              caption: window.productNameMap[product] || product,
               width: 80,
               alignment: "center",
               allowSorting: false,
+              allowEditing: false,
               format: "#,##0",
+              calculateCellValue: (rowData) => {
+                const value = rowData[`scheduledQty_${product}`];
+                return isNaN(value) || value == null ? 0 : value;
+              },
             }))
             .concat([
               {
@@ -2591,15 +2903,15 @@ $(document).ready(function () {
 
           const adjustedColumns = selection.products.map((product) => ({
             dataField: `adjustedQty_${product}`,
-            caption: product,
+            caption: window.productNameMap[product] || product,
             width: 80,
             alignment: "center",
             allowSorting: false,
-            format: "#,##0",
+            format: "#0.##",
             editorType: "dxNumberBox",
             editorOptions: {
-              min: 0,
               showSpinButtons: false,
+              step: 0.01,
               format: "#0.##",
               stylingMode: "filled",
               inputAttr: {
@@ -2764,6 +3076,7 @@ $(document).ready(function () {
                   alignment: "center",
                   allowSorting: false,
                 },
+                { caption: "Actual Qty", columns: actualColumns },
                 { caption: "Scheduled Qty", columns: scheduledColumns },
                 { caption: "Adjusted Qty", columns: adjustedColumns },
                 dateMoveColumn,
@@ -2787,6 +3100,51 @@ $(document).ready(function () {
                 $("#liftingAmendmentGrid").dxDataGrid("instance").refresh();
                 renderAllKpiCards();
               },
+              onEditorPrepared(e) {
+                if (e.dataField && /^adjustedQty_/.test(e.dataField)) {
+                  const cellDate = new Date(parseInt(yearStr), monthMap[monthStr], parentRowDate);
+                  cellDate.setHours(0, 0, 0, 0);
+
+                  const today = new Date();
+                  today.setHours(0, 0, 0, 0);
+
+                  if (cellDate >= today) {
+                    $(e.editorElement).find("input").css("cursor", "text");
+                  } else {
+                    $(e.editorElement).find("input").css("cursor", "not-allowed");
+                  }
+                }
+              },
+              onCellPrepared(e) {
+                if (e.rowType !== "data") return;
+
+                const cellDate = new Date(parseInt(yearStr), monthMap[monthStr], parentRowDate);
+                cellDate.setHours(0, 0, 0, 0);
+
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                const isAdjQty = /^adjustedQty_/.test(e.column.dataField);
+                const isMoveDate = e.column.dataField === "DATE_VALUE_ADJ";
+
+                if (cellDate < today) {
+                  // ❌ Past dates: disable edit styling
+                  if (isAdjQty || isMoveDate) {
+                    $(e.cellElement).css({
+                      backgroundColor: "#eee",
+                      color: "#999",
+                      cursor: "not-allowed"
+                    });
+                  }
+                } else {
+                  // ✅ Present/Future dates: make cursor text for adjustedQty
+                  if (isAdjQty) {
+                    $(e.cellElement).css({
+                      cursor: "text"
+                    });
+                  }
+                }
+              }
             })
             .appendTo(container);
         },
